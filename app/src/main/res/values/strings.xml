@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">E-Farm Poland Edition</string>
+    <string name="app_name_main">E-Farm\nPoland Edition</string>
+    <string name="info_start">Click to start!</string>
+
+    <string name="StartRunError">Wystąpił błąd wątku animacyjnego!</string>
+    <string name="AuthorNameVersion">Kacper Kisielewski v.1.0</string>
+</resources>
