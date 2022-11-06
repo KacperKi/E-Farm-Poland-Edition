@@ -39,11 +39,18 @@ public class StartActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         startActivityLogin = findViewById(R.id.startLoginAct);
+        setLister();
+        runAnimation();
+        handler.postDelayed(run, 5000);
+
+
+    }
+    
+    private void setLister(){
         findViewById(R.id.helpInfo).setOnClickListener(
                 view -> Toast.makeText(StartActivity.this, "Jeżeli nie masz konta - nie przejmuj się!\n" +
                 "Dzięki automatycznym funkcjom, aplikacja utworzy je sama!", Toast.LENGTH_LONG).show());
-        runAnimation();
-        handler.postDelayed(run, 5000);
+
 
     }
 
