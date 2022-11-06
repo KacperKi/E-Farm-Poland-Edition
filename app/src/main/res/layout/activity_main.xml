@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainConstraintLay"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".StartActivity">
@@ -36,6 +37,193 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/registerArea"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20sp"
+        android:layout_marginEnd="20sp"
+        android:layout_marginBottom="150dp"
+        android:visibility="gone"
+        app:cardBackgroundColor="#B4EDE5E5"
+        app:cardCornerRadius="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="10sp"
+            android:visibility="visible">
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/alegreya_sc_black"
+                android:text="Formularz rejestracyjny"
+                android:textSize="24sp" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/usernameLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#00FFFFFF"
+                android:hint="Nazwa użytkownika"
+                android:inputType="textPersonName"
+                app:endIconMode="clear_text">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/usernameField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#00FFFFFF"
+                    android:ems="10"
+                    android:textAlignment="viewStart"
+                    android:textColorHint="#7E6060"
+                    android:visibility="visible"
+                    tools:ignore="TouchTargetSizeCheck" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/nameLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#00FFFFFF"
+                android:hint="Imię"
+                android:inputType="textPersonName"
+                app:endIconMode="clear_text">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/nameField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#00FFFFFF"
+                    android:ems="10"
+                    android:textAlignment="viewStart"
+                    android:textColorHint="#7E6060"
+                    android:visibility="visible"
+                    tools:ignore="TouchTargetSizeCheck" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/surnameLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#00FFFFFF"
+                android:hint="Nazwisko"
+                android:inputType="textPersonName"
+                app:endIconMode="clear_text">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/surnameField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#00FFFFFF"
+                    android:ems="10"
+                    android:textAlignment="viewStart"
+                    android:textColorHint="#7E6060"
+                    android:visibility="visible"
+                    tools:ignore="TouchTargetSizeCheck" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/emailLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#00FFFFFF"
+                android:hint="Adres e-mail"
+                android:inputType="textEmailAddress"
+                app:endIconMode="clear_text">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/emailField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#00FFFFFF"
+                    android:ems="10"
+                    android:textAlignment="viewStart"
+                    android:textColorHint="#7E6060"
+                    android:visibility="visible"
+                    tools:ignore="TouchTargetSizeCheck" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.9"
+                    android:background="#00FFFFFF">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#00FFFFFF"
+                        android:hint="Data urodzenia"
+                        android:inputType="date" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <ImageButton
+                    android:id="@+id/imageButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.1"
+                    android:background="#00FFFFFF"
+                    app:srcCompat="@drawable/ic_baseline_calendar_month_24"
+                    tools:ignore="SpeakableTextPresentCheck" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="40sp"
+                android:layout_marginStart="10sp"
+                android:orientation="horizontal"
+                android:visibility="visible">
+
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.2"
+                    android:gravity="center"
+                    android:text="Województwo:"
+                    android:textSize="16sp" />
+
+                <Spinner
+                    android:id="@+id/spinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.8" />
+            </LinearLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_marginStart="50sp"
+                android:layout_marginTop="30sp"
+                android:layout_marginEnd="50sp"
+                android:text="Zarejestruj"
+                app:cornerRadius="10sp" />
+
+            <CheckBox
+                android:id="@+id/actRegCheckBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="monospace"
+                android:text="@string/AcceptReg" />
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
         android:id="@+id/loginArea"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -67,7 +255,8 @@
                 android:fontFamily="@font/alegreya_sc_black"
                 android:text="Dane Logowania"
                 android:textAlignment="viewEnd"
-                android:textSize="24sp" />
+                android:textSize="24sp"
+                android:visibility="visible" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
@@ -75,10 +264,11 @@
                 android:background="#00FFFFFF"
                 android:hint="Nazwa użytkownika"
                 android:inputType="textPersonName"
+                android:visibility="visible"
                 app:endIconMode="clear_text">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/editTextTextPersonName"
+                    android:id="@+id/userLoginField"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="#00FFFFFF"
@@ -99,10 +289,10 @@
                 android:textAlignment="viewStart"
                 android:visibility="visible"
                 app:endIconMode="password_toggle"
-                app:hintTextColor="#7E6060"
-                app:inputType="textPassword">
+                app:hintTextColor="#7E6060">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/userPasswordField"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="#00FFFFFF"
@@ -112,24 +302,54 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <Button
-                android:id="@+id/zaloguj"
+                android:id="@+id/loginButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="40dp"
-                android:layout_marginEnd="40dp"
+                android:layout_marginStart="40sp"
+                android:layout_marginEnd="40sp"
                 android:text="Zaloguj"
                 android:visibility="visible" />
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/helpInfo"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:clickable="true"
-                android:scaleX="0.6"
-                android:scaleY="0.6"
-                android:src="@android:drawable/ic_menu_help"
-                android:visibility="visible" />
+                android:orientation="horizontal"
+                android:visibility="visible">
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/helpInfo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:layout_marginTop="-5sp"
+                    android:clickable="true"
+                    android:scaleX="0.6"
+                    android:scaleY="0.6"
+                    android:src="@android:drawable/ic_menu_help"
+                    android:visibility="visible" />
+
+                <Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:visibility="visible" />
+
+                <Button
+                    android:id="@+id/registerButton"
+                    style='@android:style/Widget.Holo.Button.Borderless'
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="-10sp"
+                    android:backgroundTint="#00000000"
+                    android:fontFamily="@font/alegreya_sc_black"
+                    android:gravity="right"
+                    android:text="Zarejestruj"
+                    android:textAlignment="viewEnd"
+                    android:textColor="#51504F"
+                    android:visibility="visible" />
+
+            </LinearLayout>
+
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
