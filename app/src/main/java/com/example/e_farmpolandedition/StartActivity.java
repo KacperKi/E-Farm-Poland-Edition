@@ -1,6 +1,7 @@
 package com.example.e_farmpolandedition;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.telephony.PhoneNumberFormattingTextWatcher;
@@ -27,9 +28,12 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.zip.DataFormatException;
 
 public class StartActivity extends AppCompatActivity {
 
@@ -52,12 +56,6 @@ public class StartActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         handler.removeCallbacksAndMessages(null);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        runAnimation();
     }
 
     @Override
@@ -112,7 +110,11 @@ public class StartActivity extends AppCompatActivity {
         findViewById(R.id.registerButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showRegisterCard(view);
+                try {
+                    showRegisterCard(view);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -205,7 +207,11 @@ public class StartActivity extends AppCompatActivity {
                         @Override
                         public void onClick(View view) {
                             //show fields to register user
-                            showRegisterCard(view);
+                            try {
+                                showRegisterCard(view);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
                         }
                     })
                     .addCallback(new Snackbar.Callback(){
@@ -223,7 +229,7 @@ public class StartActivity extends AppCompatActivity {
         }else Toast.makeText(getApplicationContext(), "Mamy problem z logowaniem!", Toast.LENGTH_LONG).show();
     }
 
-    private void showRegisterCard(View view){
+    private void showRegisterCard(View view) throws ParseException {
         findViewById(R.id.loginArea).setVisibility(View.GONE);
         findViewById(R.id.registerArea).setVisibility(View.VISIBLE);
 
@@ -240,15 +246,40 @@ public class StartActivity extends AppCompatActivity {
         });
 
         String wojewodztwo = spinner.getSelectedItem().toString();
-
+        //acceptReg - akceptacja regulaminu zmienna
         TextInputLayout userLoginLayout = findViewById(R.id.usernameLayout);
         TextInputLayout nameLayout = findViewById(R.id.nameLayout);
         TextInputLayout surnameLayout = findViewById(R.id.surnameLayout);
+        TextInputLayout emailLayout = findViewById(R.id.emailLayout);
+        TextInputLayout dateLayout = findViewById(R.id.dateLayout);
+
+        Button registerButton = (Button) findViewById(R.id.registerButtonArea);
+        registerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                /*
 
         this.imie = nameLayout.getEditText().getText().toString();
         this.nazwisko = surnameLayout.getEditText().toString();
         this.userLogin = userLoginLayout.getEditText().toString();
+        this.email = emailLayout.getEditText().toString();
 
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy");
+        try {
+            this.data = dateFormat.parse(dateLayout.getEditText().toString());
+        }
+        catch (ParseException e){
+            Log.e("Parse exception - Start Activity", e.toString());
+        }
+                 */
+
+                Intent myIntent = new Intent(StartActivity.this, MainActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("previousActivity", "StartActivity");
+                myIntent.putExtras(bundle);
+                StartActivity.this.startActivity(myIntent);
+            }
+        });
 
 
     }

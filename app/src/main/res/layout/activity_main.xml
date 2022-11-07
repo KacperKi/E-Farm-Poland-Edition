@@ -155,6 +155,7 @@
                 android:orientation="horizontal">
 
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/dateLayout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.9"
@@ -179,11 +180,9 @@
                     tools:ignore="SpeakableTextPresentCheck" />
             </LinearLayout>
 
-
             <LinearLayout
                 android:layout_width="fill_parent"
-                android:layout_height="40sp"
-                android:layout_marginStart="10sp"
+                android:layout_height="50sp"
                 android:orientation="horizontal"
                 android:visibility="visible">
 
@@ -203,15 +202,39 @@
                     android:layout_weight="0.8" />
             </LinearLayout>
 
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/userInsertPasswordLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#00FFFFFF"
+                android:ems="10"
+                android:hint="Hasło Użytkownika"
+                android:inputType="textPassword"
+                android:textAlignment="viewStart"
+                android:visibility="visible"
+                app:endIconMode="password_toggle"
+                app:hintTextColor="#7E6060">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/userInsertPasswordPasswordField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#00FFFFFF"
+                    android:inputType="textPassword"
+                    android:textColorHint="#7E6060" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/registerButtonArea"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
                 android:layout_marginStart="50sp"
                 android:layout_marginTop="30sp"
                 android:layout_marginEnd="50sp"
                 android:text="Zarejestruj"
                 app:cornerRadius="10sp" />
+
 
             <CheckBox
                 android:id="@+id/actRegCheckBox"
@@ -259,6 +282,7 @@
                 android:visibility="visible" />
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/userLoginLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#00FFFFFF"
@@ -280,6 +304,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/userPasswordLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#00FFFFFF"
