@@ -6,6 +6,7 @@
     <string name="StartRunError">Wystąpił błąd wątku animacyjnego!</string>
     <string name="AuthorNameVersion">Kacper Kisielewski v.1.0</string>
     <string name="AcceptReg">Akceptuję Regulamin</string>
+    <string name="tractor_logo">tractor_logo</string>
 
     <string-array name="wojewodztwa">
         <item>dolnośląskie</item>
@@ -26,4 +27,6 @@
         <item>zachodniopomorskie</item>
 
     </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
