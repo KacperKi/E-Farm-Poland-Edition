@@ -8,6 +8,9 @@ import android.os.Handler;
 import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,6 +33,9 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<weatherDataClass> danePomiarowe;
     Handler weatherHandler = new Handler();
 
+    private FragmentManager fragmentManager;
+    private Fragment fragment1;
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -47,8 +53,18 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.main_user_view);
         this.previousAct= getIntent().getExtras().getString("previousActivity");
 
+        fragment1 = new WeatherFragment();
+        fragmentManager = getSupportFragmentManager();
+
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+
         danePomiarowe = new ArrayList<>();
         new weatherData().start();
+
+
+        transaction.add(R.id.weather_layout, fragment1);
+        transaction.addToBackStack(null);
+        transaction.commit();
 
 
     }
