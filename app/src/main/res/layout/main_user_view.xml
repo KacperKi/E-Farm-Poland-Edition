@@ -76,7 +76,7 @@
                     android:id="@+id/weather_layout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="5sp"
+                    android:layout_margin="10sp"
                     android:layout_weight="1">
 
                 </FrameLayout>
