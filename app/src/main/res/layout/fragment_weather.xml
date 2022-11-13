@@ -17,16 +17,32 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/textView24"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0sp"
             android:layout_weight="1"
-            android:fontFamily="@font/alegreya_sc_black"
             android:gravity="center_vertical"
-            android:text="Warunki Pogodowe"
-            android:textAlignment="center"
-            android:textSize="18sp" />
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="0sp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:fontFamily="@font/alegreya_sc_black"
+                android:gravity="center_vertical"
+                android:text="Warunki Pogodowe"
+                android:textAlignment="center"
+                android:textSize="18sp" />
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="0sp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:contentDescription="See More"
+                android:src="@drawable/ic_baseline_navigate_next_24" />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -161,35 +177,6 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:fontFamily="monospace"
-                android:text="TextView"
-                android:textAlignment="center" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:textAlignment="viewStart">
-
-            <TextView
-                android:id="@+id/kierunekWiatru"
-                android:layout_width="0sp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:fontFamily="monospace"
-                android:gravity="center_vertical"
-                android:text="K. Wiatru"
-                android:textAlignment="viewStart" />
-
-            <TextView
-                android:id="@+id/kierunekWiatruV"
-                android:layout_width="0sp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:fontFamily="monospace"
-                android:gravity="center_vertical"
                 android:text="TextView"
                 android:textAlignment="center" />
         </LinearLayout>

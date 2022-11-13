@@ -42,13 +42,14 @@ public class MainActivity extends AppCompatActivity{
     Handler weatherHandler = new Handler();
     ViewModelWeather viewModelWeather;
     CardView selectWoj;
+    String currentFrag;
 
     Handler handler = new Handler();
     Runnable run;
 
     private int wojewodztwo=0;
     private FragmentManager fragmentManager;
-    private Fragment fragment1;
+    private Fragment fragment1, fragment2;
 
     @Override
     protected void onCreate(Bundle b) {
@@ -59,6 +60,8 @@ public class MainActivity extends AppCompatActivity{
         find_objects();
         create_listeners();
 
+
+        //To verify previous step in app.
         this.previousAct= getIntent().getExtras().getString("previousActivity");
 
         viewModelWeather = ViewModelProviders.of(MainActivity.this).get(ViewModelWeather.class);
@@ -171,7 +174,25 @@ public class MainActivity extends AppCompatActivity{
         this.selectWoj.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                if(currentFrag.equals("First Frag")) {
+                    fragmentManager.beginTransaction()
+                            .setCustomAnimations(R.anim.enter_right_to_left, R.anim.exit_right_to_left,
+                                    R.anim.eneter_left_to_right, R.anim.exit_left_to_right)
+                            .replace(R.id.weather_layout, fragment2)
+                            .addToBackStack(null)
+                            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                            .commit();
+                    currentFrag = "Sec Frag";
+                } else{
+                    fragmentManager.beginTransaction()
+                            .setCustomAnimations(R.anim.enter_right_to_left, R.anim.exit_right_to_left,
+                                    R.anim.eneter_left_to_right, R.anim.exit_left_to_right)
+                            .replace(R.id.weather_layout, fragment1)
+                            .addToBackStack(null)
+                            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                            .commit();
+                    currentFrag= "First Frag";
+                }
             }
         });
     }
@@ -180,8 +201,10 @@ public class MainActivity extends AppCompatActivity{
         fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         fragment1 = new WeatherFragment();
+        fragment2 = new fragment_weather_2();
 
-        transaction.add(R.id.weather_layout, fragment1);
+        transaction.add(R.id.weather_layout, fragment1, "First Frag");
+        currentFrag = "First Frag";
 
         transaction.addToBackStack(null);
         transaction.commit();
