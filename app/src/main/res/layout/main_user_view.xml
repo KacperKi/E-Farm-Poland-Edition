@@ -36,7 +36,7 @@
                 android:layout_margin="5sp"
                 android:layout_weight="1"
                 app:cardBackgroundColor="#19829556"
-                app:cardCornerRadius="20sp" >
+                app:cardCornerRadius="20sp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -65,18 +65,19 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/wojewodztwoButton"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="5sp"
                 android:layout_weight="1"
                 app:cardBackgroundColor="#19829556"
-                app:cardCornerRadius="20sp" >
+                app:cardCornerRadius="20sp">
 
                 <FrameLayout
                     android:id="@+id/weather_layout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="10sp"
+                    android:layout_margin="5sp"
                     android:layout_weight="1">
 
                 </FrameLayout>

@@ -1,7 +1,10 @@
 package com.example.e_farmpolandedition;
 
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -9,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -31,47 +35,40 @@ import java.util.Date;
 
 public class MainActivity extends AppCompatActivity{
 
+    Context context;
     private String previousAct;
     ProgressDialog progressDialog;
     ArrayList<weatherDataClass> danePomiarowe;
     Handler weatherHandler = new Handler();
     ViewModelWeather viewModelWeather;
+    CardView selectWoj;
 
+    Handler handler = new Handler();
+    Runnable run;
+
+    private int wojewodztwo=0;
     private FragmentManager fragmentManager;
     private Fragment fragment1;
-
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        if(previousAct.equals("StartActivity")) {
-            Intent myIntent = new Intent(MainActivity.this, StartActivity.class);
-            MainActivity.this.startActivity(myIntent);
-            finish();
-        }
-
-    }
 
     @Override
     protected void onCreate(Bundle b) {
         super.onCreate(b);
         setContentView(R.layout.main_user_view);
+        context = getApplicationContext();
+
+        find_objects();
+        create_listeners();
+
         this.previousAct= getIntent().getExtras().getString("previousActivity");
+
         viewModelWeather = ViewModelProviders.of(MainActivity.this).get(ViewModelWeather.class);
 
-        fragment1 = new WeatherFragment();
-        fragmentManager = getSupportFragmentManager();
-
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-
         danePomiarowe = new ArrayList<>();
-        viewModelWeather.setData(danePomiarowe);
+        viewModelWeather.setData(new weatherDataClass());
         new weatherData().start();
 
-        transaction.add(R.id.weather_layout, fragment1);
-        transaction.addToBackStack(null);
-        transaction.commit();
-
+        set_fragment_in_app();
+        run_reading_data();
     }
 
     class weatherData extends Thread {
@@ -148,9 +145,76 @@ public class MainActivity extends AppCompatActivity{
         }
     }
 
+    private void find_objects(){
+        this.selectWoj = findViewById(R.id.wojewodztwoButton);
+    }
+
+    private void create_listeners(){
+        this.selectWoj.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setTitle("Wybierz stację pomiarową!");
+                ArrayList<String> elements = new ArrayList<>();
+                for(weatherDataClass w: danePomiarowe){
+                    elements.add(w.getStacja());
+                }
+                builder.setItems(elements.toArray(new String[elements.size()]), (dialog, which) -> {
+                    wojewodztwo = which;
+                    viewModelWeather.dataToPrint.setValue(danePomiarowe.get(wojewodztwo));
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
+                return false;
+            };
+        });
+        this.selectWoj.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+    }
+
+    private void set_fragment_in_app(){
+        fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        fragment1 = new WeatherFragment();
+
+        transaction.add(R.id.weather_layout, fragment1);
+
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
+    private void run_reading_data(){
+        run = new Runnable() {
+            @Override
+            public void run() {
+                if(danePomiarowe.isEmpty()) viewModelWeather.setData(new weatherDataClass());
+                else viewModelWeather.setData(danePomiarowe.get(wojewodztwo));
+                Log.e("Data Runnable - ", "RUN FUNCTION TO UPDATE DATA FROM API");
+                handler.postDelayed(this, 5000);
+            }
+        };
+        handler.postDelayed(run, 5000);
+    }
+
     private final void setDanePomiarowe(ArrayList<weatherDataClass> t){
         this.danePomiarowe = t;
-        viewModelWeather.setData(t);
-        Log.e("Len of data from API: ", String.valueOf(danePomiarowe.size()));
+        //viewModelWeather.setData(t.get(wojewodztwo));
+        viewModelWeather.dataToPrint.setValue(t.get(wojewodztwo));
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if(previousAct.equals("StartActivity")) {
+            Intent myIntent = new Intent(MainActivity.this, StartActivity.class);
+            MainActivity.this.startActivity(myIntent);
+            finish();
+        }
+
+    }
+
 }

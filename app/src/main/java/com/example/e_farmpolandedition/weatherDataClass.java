@@ -5,11 +5,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class weatherDataClass {
-        int id_stacji, godzina_pomiaru, kierunek_wiatru;
-        Float suma_opadu;
-        String stacja;
-        Date data_pomiaru;
-        float temperatura, predkosc_wiatru, wilgotnosc_wzgledna, cisnienie;
+        int id_stacji = 0, godzina_pomiaru=0 , kierunek_wiatru=0;
+        Float suma_opadu =0.0F;
+        String stacja = "Brak";
+        Date data_pomiaru = new Date(1901,01,01);
+        float temperatura = 0.0F, predkosc_wiatru= 0.0F, wilgotnosc_wzgledna = 0.0F, cisnienie=0.0F;
 
         public weatherDataClass() {
         }

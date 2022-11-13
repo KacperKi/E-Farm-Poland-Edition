@@ -7,14 +7,14 @@ import java.util.ArrayList;
 
 public class ViewModelWeather extends ViewModel {
 
-    MutableLiveData<ArrayList<weatherDataClass>> dataToPrint = new MutableLiveData<>();
+    public final MutableLiveData<weatherDataClass> dataToPrint = new MutableLiveData<>();
 
-    public void setData(ArrayList<weatherDataClass> s)
+    public void setData(weatherDataClass s)
     {
         dataToPrint.setValue(s);
     }
 
-    public MutableLiveData<ArrayList<weatherDataClass>> getData()
+    public MutableLiveData<weatherDataClass> getData()
     {
         return dataToPrint;
     }
