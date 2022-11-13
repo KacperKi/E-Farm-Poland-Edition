@@ -58,9 +58,9 @@ public class WeatherFragment extends Fragment {
             @Override
             public void onChanged(weatherDataClass s ) {
                     id_stacji.setText(String.valueOf(s.getId_stacji()));
-                    temperatura.setText(String.valueOf(s.getTemperatura())+"\u2103");
-                    suma_opadu.setText(String.valueOf(s.getSuma_opadu()));
-                    cisnienie.setText(String.valueOf(s.getCisnienie())+"hPa");
+                    temperatura.setText(String.valueOf(s.getTemperatura())+" \u2103");
+                    suma_opadu.setText(String.valueOf(s.getSuma_opadu())+" mm");
+                    cisnienie.setText(String.valueOf(s.getCisnienie())+" hPa");
 
                     nazwaStacji.setText(s.getStacja());
             }

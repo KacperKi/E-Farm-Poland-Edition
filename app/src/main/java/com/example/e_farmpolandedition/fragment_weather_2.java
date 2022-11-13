@@ -12,9 +12,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
 public class fragment_weather_2 extends Fragment {
 
-    TextView kierunekWiatru, godzina, data, wilgotnosc;
+    TextView kierunekWiatru, godzina, data, wilgotnosc, predkoscWiatru;
 
     ViewModelWeather viewModel;
     Observer<weatherDataClass> weatherDataClassObserver;
@@ -32,6 +35,7 @@ public class fragment_weather_2 extends Fragment {
         wilgotnosc = (TextView) view.findViewById(R.id.wilgotnoscV);
         data = (TextView) view.findViewById(R.id.dataV);
         godzina = (TextView) view.findViewById(R.id.godzinaV);
+        predkoscWiatru = (TextView) view.findViewById(R.id.predkoscWiatruV);
 
         viewModel = new ViewModelProvider(requireActivity()).get(ViewModelWeather.class);
         weatherDataClassObserver = new Observer<weatherDataClass>() {
@@ -60,8 +64,12 @@ public class fragment_weather_2 extends Fragment {
                 kierunekWiatru.setText(kI);
 
                 wilgotnosc.setText(String.valueOf(s.getWilgotnosc_wzgledna()));
-                data.setText(String.valueOf(s.getData_pomiaru()));
+
+                DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+                data.setText(String.valueOf(df.format(s.getData_pomiaru())));
+
                 godzina.setText(String.valueOf(s.getGodzina_pomiaru())+":00");
+                predkoscWiatru.setText(String.valueOf(s.getPredkosc_wiatru())+"km/h");
 
             }
         };

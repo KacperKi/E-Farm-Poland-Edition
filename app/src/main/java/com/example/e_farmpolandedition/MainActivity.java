@@ -225,7 +225,6 @@ public class MainActivity extends AppCompatActivity{
 
     private final void setDanePomiarowe(ArrayList<weatherDataClass> t){
         this.danePomiarowe = t;
-        //viewModelWeather.setData(t.get(wojewodztwo));
         viewModelWeather.dataToPrint.setValue(t.get(wojewodztwo));
     }
 

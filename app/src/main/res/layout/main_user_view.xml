@@ -4,13 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_gradient" >
+    android:background="@drawable/back_1">
 
     <ImageView
         android:id="@+id/icon_tracor"
         android:layout_width="100sp"
         android:layout_height="100sp"
         android:layout_margin="2sp"
+        android:background="#64DFDEDE"
         android:clickable="false"
         android:contentDescription="@string/tractor_logo"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -35,7 +36,7 @@
                 android:layout_height="match_parent"
                 android:layout_margin="5sp"
                 android:layout_weight="1"
-                app:cardBackgroundColor="#19829556"
+                app:cardBackgroundColor="#96989895"
                 app:cardCornerRadius="20sp">
 
                 <LinearLayout
@@ -70,7 +71,7 @@
                 android:layout_height="match_parent"
                 android:layout_margin="5sp"
                 android:layout_weight="1"
-                app:cardBackgroundColor="#19829556"
+                app:cardBackgroundColor="#96989895"
                 app:cardCornerRadius="20sp">
 
                 <FrameLayout
@@ -92,15 +93,14 @@
             android:layout_marginBottom="5sp"
             android:layout_weight="1"
             android:baselineAligned="false"
-            android:orientation="horizontal"
-            >
+            android:orientation="horizontal">
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="5sp"
                 android:layout_weight="1"
-                app:cardBackgroundColor="#19829556"
+                app:cardBackgroundColor="#96989895"
                 app:cardCornerRadius="20sp">
 
                 <LinearLayout
@@ -134,7 +134,7 @@
                 android:layout_height="match_parent"
                 android:layout_margin="5sp"
                 android:layout_weight="1"
-                app:cardBackgroundColor="#19829556"
+                app:cardBackgroundColor="#96989895"
                 app:cardCornerRadius="20sp">
 
                 <LinearLayout
