@@ -23,9 +23,15 @@
 
             <meta-data
                 android:name="android.app.lib_name"
-                android:value="" />
+                android:value=""
+                />
         </activity>
         <activity android:name=".MainActivity"/>
+        <activity android:name=".twojeUprawy">
+            <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBIGDNJ85TKRTSpjInV_sQgs_UJosXWqk0"/>
+        </activity>
 
         <meta-data
             android:name="preloaded_fonts"

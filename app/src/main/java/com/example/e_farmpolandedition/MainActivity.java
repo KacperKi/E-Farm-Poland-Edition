@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity{
     ArrayList<weatherDataClass> danePomiarowe;
     Handler weatherHandler = new Handler();
     ViewModelWeather viewModelWeather;
-    CardView selectWoj;
+    CardView selectWoj,twojeUprawy;
     String currentFrag;
 
     Handler handler = new Handler();
@@ -150,6 +150,7 @@ public class MainActivity extends AppCompatActivity{
 
     private void find_objects(){
         this.selectWoj = findViewById(R.id.wojewodztwoButton);
+        this.twojeUprawy = findViewById(R.id.twojeUprawy);
     }
 
     private void create_listeners(){
@@ -195,6 +196,13 @@ public class MainActivity extends AppCompatActivity{
                 }
             }
         });
+        this.twojeUprawy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent myIntent = new Intent(MainActivity.this, twojeUprawy.class);
+                MainActivity.this.startActivity(myIntent);
+            }
+        });
     }
 
     private void set_fragment_in_app(){
@@ -205,7 +213,6 @@ public class MainActivity extends AppCompatActivity{
 
         transaction.add(R.id.weather_layout, fragment1, "First Frag");
         currentFrag = "First Frag";
-
         transaction.addToBackStack(null);
         transaction.commit();
     }

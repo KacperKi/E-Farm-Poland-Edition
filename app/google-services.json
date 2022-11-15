@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "123477433823",
+    "project_id": "e-farm-poland-edition",
+    "storage_bucket": "e-farm-poland-edition.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:123477433823:android:ec4c7afa2d858c6022f86a",
+        "android_client_info": {
+          "package_name": "com.example.e_farmpolandedition"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "123477433823-o4tjgnfsi1q0embppf07aj3r5fkpuito.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAKjpEeGXbMnpaCX6hffxD-DbM_bUa6_kg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "123477433823-o4tjgnfsi1q0embppf07aj3r5fkpuito.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
