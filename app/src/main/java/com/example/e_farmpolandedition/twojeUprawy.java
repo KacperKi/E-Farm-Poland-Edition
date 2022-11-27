@@ -1,10 +1,15 @@
 package com.example.e_farmpolandedition;
 
+import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -109,32 +114,57 @@ public class twojeUprawy extends AppCompatActivity implements OnMapReadyCallback
     }
 
     private void showDialogInsertData(){
+
         final Dialog dialog = new Dialog(twojeUprawy.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.insert_data_gps);
 
-        final EditText name = findViewById(R.id.name);
-        final Spinner plantName = findViewById(R.id.plantName);
-        final EditText surface = findViewById(R.id.surface);
-        final Spinner surfaceMetric = findViewById(R.id.surfaceMetric);
-        final TextView startDate = findViewById(R.id.selectedDate);
-        final Button selectDate = findViewById(R.id.selectDate);
+        final EditText name = dialog.findViewById(R.id.name);
+        final Spinner plantName = dialog.findViewById(R.id.plantName);
+        final EditText surface = dialog.findViewById(R.id.surface);
+        final Spinner surfaceMetric = dialog.findViewById(R.id.surfaceMetric);
+        final TextView startDate = dialog.findViewById(R.id.selectedDate);
+        final Button selectDate = dialog.findViewById(R.id.selectDate);
+        final Button zatwierdzDane = dialog.findViewById(R.id.zatwierdzDane);
 
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getApplicationContext(),
                 R.array.uprawy, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         plantName.setAdapter(adapter);
 
-        ArrayAdapter<CharSequence> adapter1 = ArrayAdapter.createFromResource(this,
+        ArrayAdapter<CharSequence> adapter1 = ArrayAdapter.createFromResource(twojeUprawy.this,
                 R.array.metrics, android.R.layout.simple_spinner_item);
         adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         surfaceMetric.setAdapter(adapter1);
 
-
         dialog.show();
-    }
+/*
+        plantName.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
+            }
+        });
+
+        selectDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+*/
+        zatwierdzDane.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(twojeUprawy.this, "Dane zatwierdzone",
+                        Toast.LENGTH_LONG).show();
+                dialog.hide();
+            }
+        });
+
+
+    }
 }
 
 
