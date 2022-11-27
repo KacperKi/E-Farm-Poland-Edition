@@ -8,6 +8,31 @@
     <string name="AcceptReg">Akceptuję Regulamin</string>
     <string name="tractor_logo">tractor_logo</string>
 
+    <string-array name="uprawy">
+        <item>Rzepak</item>
+        <item>Gorczyca</item>
+        <item>Łubin</item>
+        <item>Pszenica</item>
+        <item>Słonecznik</item>
+        <item>Len</item>
+        <item>Konopie</item>
+        <item>Chmiel</item>
+        <item>Burak</item>
+        <item>Żyto</item>
+        <item>Pszenżyto</item>
+        <item>Jęczmień</item>
+        <item>Owies</item>
+        <item>Kukurydza</item>
+        <item>Fasola</item>
+        <item>Marchew</item>
+    </string-array>
+
+    <string-array name="metrics">
+        <item>ha</item>
+        <item>m^2</item>
+        <item>Ar</item>
+    </string-array>
+
     <string-array name="wojewodztwa">
         <item>dolnośląskie</item>
         <item>kujawsko-pomorskie</item>
