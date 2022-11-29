@@ -21,6 +21,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -114,8 +116,14 @@ public class twojeUprawy extends AppCompatActivity implements OnMapReadyCallback
     }
 
     private void showDialogInsertData(){
-
         final Dialog dialog = new Dialog(twojeUprawy.this);
+
+        MaterialDatePicker.Builder materialDateBuilder = MaterialDatePicker.Builder.datePicker();
+        materialDateBuilder.setTitleText("Ustaw datę!");
+
+        final MaterialDatePicker materialDatePicker = materialDateBuilder.build();
+
+
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.insert_data_gps);
@@ -138,32 +146,47 @@ public class twojeUprawy extends AppCompatActivity implements OnMapReadyCallback
         adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         surfaceMetric.setAdapter(adapter1);
 
-        dialog.show();
-/*
-        plantName.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        plantName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-            }
-        });
-
-        selectDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
-*/
-        zatwierdzDane.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(twojeUprawy.this, "Dane zatwierdzone",
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if(i != 0) Toast.makeText(twojeUprawy.this, "Dane zaktualizowane!",
                         Toast.LENGTH_LONG).show();
-                dialog.hide();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
             }
         });
+        surfaceMetric.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
+            }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+        selectDate.setOnClickListener(view -> {
+            materialDatePicker.show(getSupportFragmentManager(),"MATERIAL_DATE_PICKER");
+        });
+        materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener() {
+            @Override
+            public void onPositiveButtonClick(Object selection) {
+                startDate.setText(materialDatePicker.getHeaderText());
+                Toast.makeText(getApplicationContext(), "Selected date is: " + materialDatePicker.getHeaderText(),
+                        Toast.LENGTH_LONG).show();
+            }
+        });
+        zatwierdzDane.setOnClickListener(view -> {
+            Toast.makeText(twojeUprawy.this, "Dane zatwierdzone",
+                    Toast.LENGTH_LONG).show();
+            dialog.hide();
+        });
+
+        dialog.show();
     }
 }
 
