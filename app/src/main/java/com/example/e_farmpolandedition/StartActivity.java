@@ -2,6 +2,7 @@ package com.example.e_farmpolandedition;
 
 import android.content.Context;
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
 import android.telephony.PhoneNumberFormattingTextWatcher;
@@ -21,16 +22,33 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.DataFormatException;
@@ -41,17 +59,20 @@ public class StartActivity extends AppCompatActivity {
     CardView startActivityLogin;
     Handler handler = new Handler();
     Runnable run;
+    Spinner spinner;
 
     EditText userPasswordField, userLoginField;
     Button loginButton;
 
     boolean validationLoginData = false;
     boolean acceptReg = false;
+    boolean loginExistInDB = false;
 
     String userLogin, userPassword;
     String wojewodztwo, imie, nazwisko, email;
     Date data;
 
+    FirebaseFirestore firestore;
     @Override
     protected void onPause() {
         super.onPause();
@@ -64,11 +85,12 @@ public class StartActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         this.context = getApplicationContext();
 
+        firestore = FirebaseFirestore.getInstance();
+
         findObject(); //to find filed on act
         setLister();  //set listener to login or register
         runAnimation(); //function only to run animation start card view with button
         handler.postDelayed(run, 5000); //run handler in 5s delay
-
     }
 
     private void findObject(){
@@ -76,6 +98,7 @@ public class StartActivity extends AppCompatActivity {
         this.userLoginField = findViewById(R.id.userLoginField);
         this.userPasswordField = findViewById(R.id.userPasswordField);
         this.loginButton = findViewById(R.id.loginButton);
+        this.spinner = findViewById(R.id.spinner);
     }
 
     private void setLister(){
@@ -230,14 +253,36 @@ public class StartActivity extends AppCompatActivity {
     }
 
     private void showRegisterCard(View view) throws ParseException {
+        MaterialDatePicker.Builder materialDateBuilder = MaterialDatePicker.Builder.datePicker();
+        materialDateBuilder.setTitleText("Ustaw datę!");
+
+        final MaterialDatePicker materialDatePicker = materialDateBuilder.build();
+
         findViewById(R.id.loginArea).setVisibility(View.GONE);
         findViewById(R.id.registerArea).setVisibility(View.VISIBLE);
 
-        Spinner spinner = findViewById(R.id.spinner);
+        ImageButton buttonDay = findViewById(R.id.selectDateBirthday);
+        TextInputLayout dateLayout = findViewById(R.id.dateLayout);
+
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
             R.array.wojewodztwa, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
+
+        buttonDay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                materialDatePicker.show(getSupportFragmentManager(),"MATERIAL_DATE_PICKER");
+            }
+        });
+        materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener() {
+            @Override
+            public void onPositiveButtonClick(Object selection) {
+                dateLayout.getEditText().setText(materialDatePicker.getHeaderText());
+                Toast.makeText(getApplicationContext(), "Selected date is: " + materialDatePicker.getHeaderText(),
+                        Toast.LENGTH_LONG).show();
+            }
+        });
 
         CheckBox actBox = findViewById(R.id.actRegCheckBox);
         actBox.setOnCheckedChangeListener((compoundButton, b) -> {
@@ -245,44 +290,125 @@ public class StartActivity extends AppCompatActivity {
             else acceptReg = false;
         });
 
-        String wojewodztwo = spinner.getSelectedItem().toString();
-        //acceptReg - akceptacja regulaminu zmienna
+        //check checkbox
+        Button registerButton = (Button) findViewById(R.id.registerButtonArea);
+        registerButton.setOnClickListener(view1 -> {
+            userAccount userData = collectData();
+            if (userData.validationData() && acceptReg) {
+                if(acceptReg) {
+                    checkUserinDb();
+                    if (!loginExistInDB) {
+                        CollectionReference dbUsers = firestore.collection("user_account");
+                        dbUsers.document(userData.getLogin()).set(userData);
+                    } else
+                        Toast.makeText(StartActivity.this, "Login niedostępny!", Toast.LENGTH_LONG).show();
+                }else
+                    Toast.makeText(StartActivity.this, "Niezakceptowany regulamin!", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    public userAccount collectData(){
         TextInputLayout userLoginLayout = findViewById(R.id.usernameLayout);
         TextInputLayout nameLayout = findViewById(R.id.nameLayout);
         TextInputLayout surnameLayout = findViewById(R.id.surnameLayout);
         TextInputLayout emailLayout = findViewById(R.id.emailLayout);
         TextInputLayout dateLayout = findViewById(R.id.dateLayout);
+        TextInputLayout passwordLayout = findViewById(R.id.userInsertPasswordLayout);
 
-        Button registerButton = (Button) findViewById(R.id.registerButtonArea);
-        registerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                /*
-
-        this.imie = nameLayout.getEditText().getText().toString();
-        this.nazwisko = surnameLayout.getEditText().toString();
-        this.userLogin = userLoginLayout.getEditText().toString();
-        this.email = emailLayout.getEditText().toString();
+        this.imie = Objects.requireNonNull(nameLayout.getEditText()).getText().toString();
+        this.nazwisko = Objects.requireNonNull(surnameLayout.getEditText()).getText().toString();
+        this.userLogin = Objects.requireNonNull(userLoginLayout.getEditText()).getText().toString();
+        this.email = Objects.requireNonNull(emailLayout.getEditText()).getText().toString();
+        this.userPassword = Objects.requireNonNull(passwordLayout.getEditText()).getText().toString();
+        this.wojewodztwo = spinner.getSelectedItem().toString();
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy");
         try {
-            this.data = dateFormat.parse(dateLayout.getEditText().toString());
+            this.data = dateFormat.parse(dateLayout.getEditText().getText().toString());
         }
         catch (ParseException e){
             Log.e("Parse exception - Start Activity", e.toString());
         }
-                 */
 
-                Intent myIntent = new Intent(StartActivity.this, MainActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("previousActivity", "StartActivity");
-                myIntent.putExtras(bundle);
-                StartActivity.this.startActivity(myIntent);
-            }
-        });
+        userAccount t = new userAccount(
+                this.userLogin,
+                this.imie,
+                this.nazwisko,
+                this.email,
+                dateLayout.getEditText().getText().toString(),
+                this.wojewodztwo,
+                this.userPassword
+        );
 
+        return t;
+    }
 
+    public boolean checkUserinDb(){
+        TextInputLayout userLoginLayout = findViewById(R.id.usernameLayout);
+        TextInputLayout emailLayout = findViewById(R.id.emailLayout);
+
+//        firestore.collection("user_account").whereEqualTo("DOCUMENT_ID", userLoginLayout.getEditText().getText().toString())
+//                .get()
+//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                        if (task.isSuccessful()) {
+//                            boolean isEmpty = task.getResult().isEmpty();
+//                        }
+//                    }
+//                });
+//        return true;
+
+        firestore.collection("user_account")
+              //  .whereEqualTo("login",  userLoginLayout.getEditText().getText().toString() )
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            if(document.getId().equals(userLoginLayout.getEditText().getText().toString())) {
+                                loginExistInDB = true;
+                            }
+                            else {
+                                loginExistInDB = false;
+                            }
+                        }
+                    }
+                });
+
+//        firestore.collection("user_account").get()
+//                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+//                        if (!queryDocumentSnapshots.isEmpty()) {
+//                            List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
+//                                   for (DocumentSnapshot d : list) {
+//                                        userAccount c = d.toObject(userAccount.class);
+//                                    }
+//                        } else {
+//                            Toast.makeText(StartActivity.this, "No data found in Database", Toast.LENGTH_SHORT).show();
+//                        }
+//                    }
+//                })
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//
+//                    }
+//                });
+        return false;
     }
 
 
 }
+
+
+
+
+//        Intent myIntent = new Intent(StartActivity.this, MainActivity.class);
+//        Bundle bundle = new Bundle();
+//        bundle.putString("previousActivity", "StartActivity");
+//        myIntent.putExtras(bundle);
+//        StartActivity.this.startActivity(myIntent);
+

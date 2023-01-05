@@ -60,7 +60,6 @@ public class MainActivity extends AppCompatActivity{
         find_objects();
         create_listeners();
 
-
         //To verify previous step in app.
         this.previousAct= getIntent().getExtras().getString("previousActivity");
 
