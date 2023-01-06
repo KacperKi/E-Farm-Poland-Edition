@@ -61,18 +61,70 @@
                 <TextView
                     android:id="@+id/textView10"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
                     android:fontFamily="monospace"
                     android:gravity="center_vertical"
                     android:text="Lista Twoich Upraw"
                     android:textAlignment="center"
                     android:textSize="20sp" />
 
-                <ListView
+                <LinearLayout
+                    android:id="@+id/opis_kolumn"
                     android:layout_width="match_parent"
-                    android:layout_height="0sp"
-                    android:layout_weight="10" />
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2sp"
+                    android:orientation="horizontal"
+                    android:textAlignment="center"
+                    android:weightSum="5">
+
+                    <TextView
+                        android:id="@+id/textView14"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/idUprawy"
+                        android:textAlignment="center" />
+
+                    <TextView
+                        android:id="@+id/textView16"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/nazwaUprawy"
+                        android:textAlignment="center" />
+
+                    <TextView
+                        android:id="@+id/textView17"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/roslinaUprawy"
+                        android:textAlignment="center" />
+
+                    <TextView
+                        android:id="@+id/textView18"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/dataUprawy"
+                        android:textAlignment="center" />
+
+                    <TextView
+                        android:id="@+id/textView19"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/powierzchniaUprawy"
+                        android:textAlignment="center" />
+                </LinearLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerview_upraw"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10sp"
+                    tools:listitem="@layout/list_item_recycler_uprawa" />
+
             </LinearLayout>
 
         </LinearLayout>

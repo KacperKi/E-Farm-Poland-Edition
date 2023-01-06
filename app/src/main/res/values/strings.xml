@@ -54,4 +54,12 @@
     </string-array>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!--Nazwy kolumn w tabeli-->
+    <string name="idUprawy">ID</string>
+    <string name="nazwaUprawy">Nazwa</string>
+    <string name="roslinaUprawy">Roślina</string>
+    <string name="dataUprawy">Data</string>
+    <string name="powierzchniaUprawy">Powierzchnia</string>
+
 </resources>

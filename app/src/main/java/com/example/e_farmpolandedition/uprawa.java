@@ -15,7 +15,8 @@ public class uprawa {
     public uprawa() {
     }
 
-    public uprawa(String latitude, String longtitude, String name, String plantName, String dataRozpoczecia, String surface, String surfaceMetric, String description) {
+    public uprawa(String latitude, String longtitude, String name, String plantName, String dataRozpoczecia,
+                  String surface, String surfaceMetric, String description) {
         this.latitude = latitude;
         this.longtitude = longtitude;
         this.name = name;

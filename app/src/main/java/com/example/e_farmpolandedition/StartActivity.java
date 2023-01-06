@@ -1,6 +1,8 @@
 package com.example.e_farmpolandedition;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.Image;
 import android.os.Bundle;
@@ -24,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -57,9 +60,14 @@ public class StartActivity extends AppCompatActivity {
 
     Context context;
     CardView startActivityLogin;
+
     Handler handler = new Handler();
+    Handler loadData = new Handler();
+
     Runnable run;
     Spinner spinner;
+
+    ProgressDialog progressDialog;
 
     EditText userPasswordField, userLoginField;
     Button loginButton;
@@ -67,6 +75,8 @@ public class StartActivity extends AppCompatActivity {
     boolean validationLoginData = false;
     boolean acceptReg = false;
     boolean loginExistInDB = false;
+    boolean passwordCorr = false;
+    boolean funStat = false;
 
     String userLogin, userPassword;
     String wojewodztwo, imie, nazwisko, email;
@@ -120,12 +130,6 @@ public class StartActivity extends AppCompatActivity {
                 }
                 else {
                     loginAction(login,password,view);
-                    // Get your layout set up, this is just an example
-                    ConstraintLayout mainLayout = (ConstraintLayout) findViewById(R.id.mainConstraintLay);
-
-                    // Then just use the following:
-                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(mainLayout.getWindowToken(), 0);
                 }
             }
         });
@@ -224,32 +228,35 @@ public class StartActivity extends AppCompatActivity {
         this.userPassword=password;
         this.userLogin=login;
         boolean loginExist = true; //check in DB if login exist - return true, false - notify and run regis
-        if(validationLoginData && loginExist){
-            Snackbar.make(view, "Użytkownik nie istnieje, utworzyć?", Snackbar.LENGTH_LONG)
-                    .setAction("Utwórz!", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            //show fields to register user
-                            try {
-                                showRegisterCard(view);
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    })
-                    .addCallback(new Snackbar.Callback(){
-                        @Override
-                        public void onDismissed(Snackbar transientBottomBar, int event) {
-                            super.onDismissed(transientBottomBar, event);
-                            if (event == Snackbar.Callback.DISMISS_EVENT_TIMEOUT) {
-                                Toast.makeText(getApplicationContext(),
-                                        "Nie utworzono konta! Utwórz je.",
-                                        Toast.LENGTH_LONG).show();
-                            }
-                        }
-                    })
-                    .show();
+        if(validationLoginData){
+            checkLoginPasswordInDB();
+//            Snackbar.make(view, "Użytkownik nie istnieje, utworzyć?", Snackbar.LENGTH_LONG)
+//                    .setAction("Utwórz!", new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View view) {
+//                            //show fields to register user
+//                            try {
+//                                showRegisterCard(view);
+//                            } catch (ParseException e) {
+//                                e.printStackTrace();
+//                            }
+//                        }
+//                    })
+//                    .addCallback(new Snackbar.Callback(){
+//                        @Override
+//                        public void onDismissed(Snackbar transientBottomBar, int event) {
+//                            super.onDismissed(transientBottomBar, event);
+//                            if (event == Snackbar.Callback.DISMISS_EVENT_TIMEOUT) {
+//                                Toast.makeText(getApplicationContext(),
+//                                        "Nie utworzono konta! Utwórz je.",
+//                                        Toast.LENGTH_LONG).show();
+//                            }
+//                        }
+//                    })
+//                    .show();
         }else Toast.makeText(getApplicationContext(), "Mamy problem z logowaniem!", Toast.LENGTH_LONG).show();
+
+
     }
 
     private void showRegisterCard(View view) throws ParseException {
@@ -294,17 +301,33 @@ public class StartActivity extends AppCompatActivity {
         Button registerButton = (Button) findViewById(R.id.registerButtonArea);
         registerButton.setOnClickListener(view1 -> {
             userAccount userData = collectData();
-            if (userData.validationData() && acceptReg) {
+            if (userData.validationData()) {
                 if(acceptReg) {
                     checkUserinDb();
                     if (!loginExistInDB) {
                         CollectionReference dbUsers = firestore.collection("user_account");
                         dbUsers.document(userData.getLogin()).set(userData);
+
+                        new AlertDialog.Builder(StartActivity.this)
+                                .setTitle("Konto utworzone!")
+                                .setMessage("Chcesz się zalogować?")
+                                .setPositiveButton("Tak", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        findViewById(R.id.loginArea).setVisibility(View.VISIBLE);
+                                        findViewById(R.id.registerArea).setVisibility(View.GONE);                                    }
+                                })
+                                .setNegativeButton("Nie", null)
+                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                .show();
+
+
                     } else
                         Toast.makeText(StartActivity.this, "Login niedostępny!", Toast.LENGTH_LONG).show();
                 }else
                     Toast.makeText(StartActivity.this, "Niezakceptowany regulamin!", Toast.LENGTH_LONG).show();
             }
+                Toast.makeText(StartActivity.this, "Niepoprawne dane!", Toast.LENGTH_LONG).show();
+
         });
     }
 
@@ -344,28 +367,15 @@ public class StartActivity extends AppCompatActivity {
         return t;
     }
 
-    public boolean checkUserinDb(){
-        TextInputLayout userLoginLayout = findViewById(R.id.usernameLayout);
-        TextInputLayout emailLayout = findViewById(R.id.emailLayout);
-
-//        firestore.collection("user_account").whereEqualTo("DOCUMENT_ID", userLoginLayout.getEditText().getText().toString())
-//                .get()
-//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                        if (task.isSuccessful()) {
-//                            boolean isEmpty = task.getResult().isEmpty();
-//                        }
-//                    }
-//                });
-//        return true;
+    public void checkUserinDb(){
 
         firestore.collection("user_account")
-              //  .whereEqualTo("login",  userLoginLayout.getEditText().getText().toString() )
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        TextInputLayout userLoginLayout = findViewById(R.id.usernameLayout);
+
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             if(document.getId().equals(userLoginLayout.getEditText().getText().toString())) {
                                 loginExistInDB = true;
@@ -377,38 +387,109 @@ public class StartActivity extends AppCompatActivity {
                     }
                 });
 
-//        firestore.collection("user_account").get()
-//                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-//                        if (!queryDocumentSnapshots.isEmpty()) {
-//                            List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
-//                                   for (DocumentSnapshot d : list) {
-//                                        userAccount c = d.toObject(userAccount.class);
-//                                    }
-//                        } else {
-//                            Toast.makeText(StartActivity.this, "No data found in Database", Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//                })
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//
-//                    }
-//                });
-        return false;
     }
 
+    public void checkUserinDbLogin(){
+//        loadData.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                progressDialog = new ProgressDialog(StartActivity.this);
+//                progressDialog.setMessage("Pobieram Dane");
+//                progressDialog.setCancelable(false);
+//                progressDialog.show();
+//            }
+//        });
 
+        firestore.collection("user_account")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        TextInputLayout usernameLoginLayout = findViewById(R.id.userLoginLayout);
+                        Log.e("Koniec weryfikacji loginu!", "Weryfikacja CHECK USER IN DB LOGIN");
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            if(document.getId().equals(usernameLoginLayout.getEditText().getText().toString())) {
+                                loginExistInDB = true;
+                                verifyPassword();
+                            }
+                            else {
+                                loginExistInDB = false;
+                            }
+                        }
+                        setFunStat(true);
+                    }
+                });
+
+//        System.out.println("Fun set error after checkuser");
+//
+//        loadData.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                    if(progressDialog.isShowing()) progressDialog.dismiss();
+//            }
+//        });
+    }
+
+    public void verifyPassword(){
+        TextInputLayout userLoginLayout = findViewById(R.id.userLoginLayout);
+        TextInputLayout userPasswordLayout = findViewById(R.id.userPasswordLayout);
+
+        firestore.collection("user_account")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            if(document.getId().equals(userLoginLayout.getEditText().getText().toString())) {
+                                userAccount t = document.toObject(userAccount.class);
+                                if(t.getPassword().equals(userPasswordLayout.getEditText().getText().toString())) passwordCorr = true;
+                                else passwordCorr = false;
+                                break;
+                            }
+                        }
+                    }
+                });
+    }
+
+    public void setFunStat(boolean i){
+        this.funStat = i;
+    }
+
+    public void checkLoginPasswordInDB() {
+        TextInputLayout userLoginLayout = findViewById(R.id.userLoginLayout);
+        for(int w=0; w<3; w++){checkUserinDbLogin();}
+//        if(passwordCorr) {
+//            new AlertDialog.Builder(StartActivity.this)
+//                    .setTitle("Logowanie")
+//                    .setMessage("Logujesz się jako " + userLoginLayout.getEditText().getText().toString())
+//                    .setPositiveButton("Tak", new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialogInterface, int i) {
+//                            checkLoginPasswordInDB();
+//                        }
+//                    })
+//                    .setNegativeButton("Nie", null)
+//                    .setIcon(R.drawable.uprawy_icon)
+//                    .show();
+//        }
+
+
+            if (loginExistInDB) {
+                if (passwordCorr) {
+                    Intent myIntent = new Intent(StartActivity.this, MainActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("previousActivity", "StartActivity");
+                    myIntent.putExtras(bundle);
+                    StartActivity.this.startActivity(myIntent);
+                } else
+                    Toast.makeText(getApplicationContext(), "Hasło nieprawidłowe!", Toast.LENGTH_LONG).show();
+            } else
+                Toast.makeText(getApplicationContext(), "Login nieprawidłowy!", Toast.LENGTH_LONG).show();
+    }
 }
 
 
 
 
-//        Intent myIntent = new Intent(StartActivity.this, MainActivity.class);
-//        Bundle bundle = new Bundle();
-//        bundle.putString("previousActivity", "StartActivity");
-//        myIntent.putExtras(bundle);
-//        StartActivity.this.startActivity(myIntent);
+
 

@@ -19,6 +19,9 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.datepicker.MaterialDatePicker;
@@ -35,6 +38,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,10 +49,16 @@ public class twojeUprawy extends AppCompatActivity implements OnMapReadyCallback
     GoogleMap googleMaps;
     FirebaseFirestore firestore;
 
+    private ArrayList<uprawa> lista_upraw_usera = new ArrayList<>();
+    private RecyclerView recyclerView;
+    private uprawyRecyclerList adapterUpraw;
+
     @Override
     protected void onCreate(Bundle b) {
         super.onCreate(b);
         setContentView(R.layout.twoje_uprawy);
+
+        recyclerView = findViewById(R.id.recyclerview_upraw);
 
         firestore = FirebaseFirestore.getInstance();
 
@@ -58,6 +68,32 @@ public class twojeUprawy extends AppCompatActivity implements OnMapReadyCallback
                 .add(R.id.mapa_google, mapFragment)
                 .commit();
         mapFragment.getMapAsync(this);
+
+        getUprawyData();
+        setAdapterUpraw();
+
+    }
+
+    private void setAdapterUpraw(){
+        adapterUpraw = new uprawyRecyclerList(lista_upraw_usera);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(twojeUprawy.this);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(adapterUpraw);
+    }
+    private void getUprawyData(){
+        for(int i=0;i<40;i++) {
+            lista_upraw_usera.add(new uprawa(
+                    "24",
+                    "244",
+                    "sefsef",
+                    "124",
+                    "124",
+                    "124",
+                    "124",
+                    "124"
+            ));
+        }
     }
 
     @Override
@@ -188,19 +224,5 @@ public class twojeUprawy extends AppCompatActivity implements OnMapReadyCallback
 
         dialog.show();
     }
+
 }
-
-
-/*
-
-        Map<String, Object> users = new HashMap<>();
-        users.put("k","w");
-        users.put("kw", "w");
-
-        firestore.collection("users").add(users).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-            @Override
-            public void onSuccess(DocumentReference documentReference) {
-
-            }
-        })
- */
