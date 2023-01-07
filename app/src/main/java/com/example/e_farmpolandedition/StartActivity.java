@@ -458,27 +458,15 @@ public class StartActivity extends AppCompatActivity {
     public void checkLoginPasswordInDB() {
         TextInputLayout userLoginLayout = findViewById(R.id.userLoginLayout);
         for(int w=0; w<3; w++){checkUserinDbLogin();}
-//        if(passwordCorr) {
-//            new AlertDialog.Builder(StartActivity.this)
-//                    .setTitle("Logowanie")
-//                    .setMessage("Logujesz się jako " + userLoginLayout.getEditText().getText().toString())
-//                    .setPositiveButton("Tak", new DialogInterface.OnClickListener() {
-//                        @Override
-//                        public void onClick(DialogInterface dialogInterface, int i) {
-//                            checkLoginPasswordInDB();
-//                        }
-//                    })
-//                    .setNegativeButton("Nie", null)
-//                    .setIcon(R.drawable.uprawy_icon)
-//                    .show();
-//        }
-
 
             if (loginExistInDB) {
                 if (passwordCorr) {
+                    handler.removeCallbacks(null);
+
                     Intent myIntent = new Intent(StartActivity.this, MainActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putString("previousActivity", "StartActivity");
+                    bundle.putString("userLogin", userLoginLayout.getEditText().getText().toString());
                     myIntent.putExtras(bundle);
                     StartActivity.this.startActivity(myIntent);
                 } else

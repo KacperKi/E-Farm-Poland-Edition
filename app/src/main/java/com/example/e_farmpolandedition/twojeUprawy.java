@@ -1,12 +1,9 @@
 package com.example.e_farmpolandedition;
 
-import android.app.Activity;
 import android.app.Dialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.SharedPreferences;
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -24,15 +21,18 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.*;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -42,6 +42,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -52,14 +53,39 @@ public class twojeUprawy extends AppCompatActivity implements OnMapReadyCallback
     GoogleMap googleMaps;
     FirebaseFirestore firestore;
 
+    FloatingActionButton showAllMarker, clearAllMarker;
+
+    private String login;
+
     private ArrayList<uprawa> lista_upraw_usera = new ArrayList<>();
+    private ArrayList<String> lista_zabiegow_usera = new ArrayList<>();
+
     private RecyclerView recyclerView;
     private uprawyRecyclerList adapterUpraw;
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        getUprawyData();
+        adapterUpraw.notifyDataSetChanged();
+    }
 
     @Override
     protected void onCreate(Bundle b) {
         super.onCreate(b);
         setContentView(R.layout.twoje_uprawy);
+
+        setListenerFloatingButton();
+
+        Intent intent = getIntent();
+        login = intent.getStringExtra("login");
 
         recyclerView = findViewById(R.id.recyclerview_upraw);
 
@@ -118,18 +144,91 @@ public class twojeUprawy extends AppCompatActivity implements OnMapReadyCallback
     };
 
     private void getUprawyData(){
-        for(int i=0;i<40;i++) {
-            lista_upraw_usera.add(new uprawa(
-                    "24",
-                    "244",
-                    "sefsef",
-                    "124",
-                    "124",
-                    "124",
-                    "124",
-                    "124"
-            ));
-        }
+        lista_upraw_usera.clear();
+
+        String PATH_Uprawy = "uprawy/" + login + "/uprawa";
+        String PATH_Zabiegi = "uprawy/" + login + "/zabieg";
+
+        firestore.collection(PATH_Uprawy)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()) {
+                            Log.e("UPRAWA Dane z API Firebase UPRAWA!",
+                                    "Czas : " +
+                                        String.valueOf(Calendar.getInstance().getTime()) +
+                                        " rozmiar tablicy upraw lokalny: " +
+                                        String.valueOf(lista_upraw_usera.size())
+                                    );
+
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+//                                uprawa t = document.toObject(uprawa.class);
+                                uprawa t = new uprawa(
+                                        document.get("latitude").toString(),
+                                        document.get("longtitude").toString(),
+                                        document.get("name").toString(),
+                                        document.get("plantName").toString(),
+                                        document.get("startDate").toString(),
+                                        document.get("surface").toString(),
+                                        document.get("surfaceMetric").toString(),
+                                        document.get("description").toString()
+                                        );
+                                lista_upraw_usera.add(t);
+                            }
+
+                            adapterUpraw.updateArrayList(lista_upraw_usera);
+                            adapterUpraw.notifyDataSetChanged();
+                        }
+                    }
+                });
+
+        firestore.collection(PATH_Zabiegi)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                    lista_zabiegow_usera.add("");
+                            }
+                        }
+                    }
+                });
+
+    }
+
+    public void setListenerFloatingButton(){
+        showAllMarker = findViewById(R.id.showAllMarkersOnMap);
+        clearAllMarker = findViewById(R.id.clearAllPointOnMaps);
+
+        showAllMarker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                googleMaps.clear();
+                ArrayList<PointOnMaps> listOfPoints = new ArrayList<>();
+                for(uprawa t: lista_upraw_usera){
+                    listOfPoints.add(new PointOnMaps(
+                            new LatLng(
+                                    Float.parseFloat(t.latitude),
+                                    Float.parseFloat(t.longtitude)
+                            ),
+                            t.name));
+                }
+                for(PointOnMaps t: listOfPoints){
+                    googleMaps.addMarker(new MarkerOptions().position(t.position).title(t.nameOfMarker));
+                }
+            }
+        });
+
+        clearAllMarker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                googleMaps.clear();
+                Toast.makeText(getApplicationContext(), "Wyczyszczono mapę!", Toast.LENGTH_LONG).show();
+            }
+        });
+
     }
 
     @Override
@@ -149,13 +248,14 @@ public class twojeUprawy extends AppCompatActivity implements OnMapReadyCallback
         googleMap.setOnMarkerClickListener(this);
     }
 
+
     @Override
     public boolean onMarkerClick(@NonNull Marker marker) {
         new MaterialAlertDialogBuilder(twojeUprawy.this)
                 .setTitle("Dodaj uprawę")
                 .setMessage("Czy chcesz dodać uprawę do listy upraw? Dane lokalizacji pobierane są automatycznie z mapy.")
                 .setPositiveButton("Tak, dodaj", (dialogInterface, i) -> {
-                    showDialogInsertData();
+                    showDialogInsertData(marker);
                 })
                 .setNegativeButton("Nie", null)
                 .show();
@@ -187,14 +287,13 @@ public class twojeUprawy extends AppCompatActivity implements OnMapReadyCallback
         googleMaps.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14));
     }
 
-    private void showDialogInsertData(){
+    private void showDialogInsertData(Marker marker){
         final Dialog dialog = new Dialog(twojeUprawy.this);
 
         MaterialDatePicker.Builder materialDateBuilder = MaterialDatePicker.Builder.datePicker();
         materialDateBuilder.setTitleText("Ustaw datę!");
 
         final MaterialDatePicker materialDatePicker = materialDateBuilder.build();
-
 
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
@@ -204,8 +303,10 @@ public class twojeUprawy extends AppCompatActivity implements OnMapReadyCallback
         final Spinner plantName = dialog.findViewById(R.id.plantName);
         final EditText surface = dialog.findViewById(R.id.surface);
         final Spinner surfaceMetric = dialog.findViewById(R.id.surfaceMetric);
-        final TextView startDate = dialog.findViewById(R.id.selectedDate);
+        final TextView startDate = dialog.findViewById(R.id.selectedDates);
         final Button selectDate = dialog.findViewById(R.id.selectDate);
+        final TextView selectedDates = dialog.findViewById(R.id.selectedDates);
+        final EditText description = dialog.findViewById(R.id.description);
         final Button zatwierdzDane = dialog.findViewById(R.id.zatwierdzDane);
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getApplicationContext(),
@@ -248,17 +349,94 @@ public class twojeUprawy extends AppCompatActivity implements OnMapReadyCallback
             @Override
             public void onPositiveButtonClick(Object selection) {
                 startDate.setText(materialDatePicker.getHeaderText());
-                Toast.makeText(getApplicationContext(), "Selected date is: " + materialDatePicker.getHeaderText(),
+                Toast.makeText(getApplicationContext(), "Wybrana data to: " + materialDatePicker.getHeaderText(),
                         Toast.LENGTH_LONG).show();
             }
         });
+
         zatwierdzDane.setOnClickListener(view -> {
-            Toast.makeText(twojeUprawy.this, "Dane zatwierdzone",
-                    Toast.LENGTH_LONG).show();
-            dialog.hide();
+            String PATH = "uprawy/" + login + "/uprawa";
+
+
+            Map<String, Object> uprawa = new HashMap<>();
+
+            uprawa.put("latitude", String.valueOf(marker.getPosition().latitude));
+            uprawa.put("longtitude", String.valueOf(marker.getPosition().longitude));
+            uprawa.put("name", name.getText().toString());
+            uprawa.put("plantName", plantName.getSelectedItem().toString());
+            uprawa.put("surface", surface.getText().toString());
+            uprawa.put("surfaceMetric", surfaceMetric.getSelectedItem().toString());
+            uprawa.put("startDate", selectedDates.getText().toString());
+            uprawa.put("description", description.getText().toString());
+
+            firestore.collection(PATH).document(name.getText().toString())
+                .set(uprawa)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Snackbar.make(view, "Poprawnie dodano dane!", Snackbar.LENGTH_LONG)
+                                .setAction("OK", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        dialog.hide();
+                                    }
+                                })
+                                .addCallback(new BaseTransientBottomBar.BaseCallback<Snackbar>() {
+                                    @Override
+                                    public void onDismissed(Snackbar transientBottomBar, int event) {
+                                        super.onDismissed(transientBottomBar, event);
+                                        dialog.hide();
+                                    }
+                                })
+                                .show();
+                    }
+                });
+
+            getUprawyData();
         });
 
         dialog.show();
     }
 
+    private void updateGoogleMapsMarkers(){
+        googleMaps.clear();
+        ArrayList<PointOnMaps> listOfPoints = new ArrayList<>();
+        for(uprawa t: lista_upraw_usera){
+            listOfPoints.add(new PointOnMaps(
+                    new LatLng(
+                            Float.parseFloat(t.latitude),
+                            Float.parseFloat(t.longtitude)
+                    ),
+                    t.name));
+        }
+        for(PointOnMaps t: listOfPoints){
+            googleMaps.addMarker(new MarkerOptions().position(t.position).title(t.nameOfMarker));
+        }
+    }
+
+    public class PointOnMaps {
+        private LatLng position;
+        private String nameOfMarker;
+
+        public PointOnMaps(LatLng position, String nameOfMarker) {
+            this.position = position;
+            this.nameOfMarker = nameOfMarker;
+        }
+
+        public LatLng getPosition() {
+            return position;
+        }
+
+        public void setPosition(LatLng position) {
+            this.position = position;
+        }
+
+        public String getNameOfMarker() {
+            return nameOfMarker;
+        }
+
+        public void setNameOfMarker(String nameOfMarker) {
+            this.nameOfMarker = nameOfMarker;
+        }
+    }
 }

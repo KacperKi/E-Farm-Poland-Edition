@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
@@ -36,6 +37,7 @@ import java.util.Date;
 public class MainActivity extends AppCompatActivity{
 
     Context context;
+    String login;
     private String previousAct;
     ProgressDialog progressDialog;
     ArrayList<weatherDataClass> danePomiarowe;
@@ -56,6 +58,10 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(b);
         setContentView(R.layout.main_user_view);
         context = getApplicationContext();
+
+        Intent intent = getIntent();
+        login = intent.getStringExtra("userLogin");
+        Toast.makeText(getApplicationContext(), "witaj "+login, Toast.LENGTH_LONG).show();
 
         find_objects();
         create_listeners();
@@ -199,6 +205,9 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onClick(View view) {
                 Intent myIntent = new Intent(MainActivity.this, twojeUprawy.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("login", login);
+                myIntent.putExtras(bundle);
                 MainActivity.this.startActivity(myIntent);
             }
         });
@@ -220,10 +229,10 @@ public class MainActivity extends AppCompatActivity{
         run = new Runnable() {
             @Override
             public void run() {
-                if(danePomiarowe.isEmpty()) viewModelWeather.setData(new weatherDataClass());
-                else viewModelWeather.setData(danePomiarowe.get(wojewodztwo));
-                Log.e("Data Runnable - ", "RUN FUNCTION TO UPDATE DATA FROM API");
-                handler.postDelayed(this, 5000);
+                    if (danePomiarowe.isEmpty()) viewModelWeather.setData(new weatherDataClass());
+                    else viewModelWeather.setData(danePomiarowe.get(wojewodztwo));
+                    Log.e("Data Runnable - ", "RUN FUNCTION TO UPDATE DATA FROM API");
+                    handler.postDelayed(this, 5000);
             }
         };
         handler.postDelayed(run, 5000);

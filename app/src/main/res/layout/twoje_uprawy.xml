@@ -7,7 +7,18 @@
     android:background="@drawable/back_1">
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floatingActionButton2"
+        android:id="@+id/clearAllPointOnMaps"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="40dp"
+        android:clickable="true"
+        app:backgroundTint="#CA7373"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@android:drawable/ic_menu_delete" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/showAllMarkersOnMap"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="10dp"
@@ -15,7 +26,7 @@
         android:clickable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/ic_baseline_add_circle_24" />
+        app:srcCompat="@drawable/uprawy_icon" />
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/materialCardView"
@@ -25,6 +36,7 @@
         android:layout_marginTop="10sp"
         android:layout_marginRight="5sp"
         android:layout_marginBottom="10sp"
+        android:visibility="visible"
         app:cardBackgroundColor="#968F8F8F"
         app:cardCornerRadius="25sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -39,17 +51,18 @@
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/map_view"
-                app:cardCornerRadius="25sp"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                app:cardBackgroundColor="#00FFFFFF">
+                app:cardBackgroundColor="#00FFFFFF"
+                app:cardCornerRadius="25sp">
 
                 <com.google.android.gms.maps.MapView
                     android:id="@+id/mapa_google"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    tools:ignore="SpeakableTextPresentCheck" />
             </androidx.cardview.widget.CardView>
 
             <LinearLayout

@@ -88,7 +88,7 @@
             android:textSize="22sp" />
 
         <TextView
-            android:id="@+id/selectedDate"
+            android:id="@+id/selectedDates"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginStart="10sp"
@@ -96,6 +96,16 @@
             android:text="01/01/2001"
             android:textSize="22sp" />
     </LinearLayout>
+
+    <EditText
+        android:id="@+id/description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Opis Twojej uprawy"
+        android:inputType="textPersonName"
+        android:textColor="#9D9D9D"
+        android:textSize="22sp" />
 
     <Button
         android:id="@+id/selectDate"

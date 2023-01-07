@@ -94,4 +94,9 @@ public class uprawyRecyclerList extends RecyclerView.Adapter<uprawyRecyclerList.
     public int getItemCount() {
         return uprawaLista.size();
     }
+
+    public void updateArrayList(ArrayList<uprawa> listaUpraw){
+        this.uprawaLista = listaUpraw;
+    }
+
 }
