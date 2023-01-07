@@ -15,7 +15,8 @@ public class userAccount {
     public userAccount() {
     }
 
-    public userAccount(String login, String name, String surname, String email, String date, String wojewodztwo, String password) {
+    public userAccount(String login, String name, String surname, String email,
+                       String date, String wojewodztwo, String password) {
         this.login = login;
         this.name = name;
         this.surname = surname;

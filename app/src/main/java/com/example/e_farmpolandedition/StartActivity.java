@@ -4,57 +4,44 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
-import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
-import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.zip.DataFormatException;
 
 public class StartActivity extends AppCompatActivity {
 
@@ -108,7 +95,7 @@ public class StartActivity extends AppCompatActivity {
         this.userLoginField = findViewById(R.id.userLoginField);
         this.userPasswordField = findViewById(R.id.userPasswordField);
         this.loginButton = findViewById(R.id.loginButton);
-        this.spinner = findViewById(R.id.spinner);
+        this.spinner = findViewById(R.id.editSpinnerWojewodztwo);
     }
 
     private void setLister(){
@@ -269,7 +256,7 @@ public class StartActivity extends AppCompatActivity {
         findViewById(R.id.registerArea).setVisibility(View.VISIBLE);
 
         ImageButton buttonDay = findViewById(R.id.selectDateBirthday);
-        TextInputLayout dateLayout = findViewById(R.id.dateLayout);
+        TextInputLayout dateLayout = findViewById(R.id.editDate);
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
             R.array.wojewodztwa, android.R.layout.simple_spinner_item);
@@ -333,11 +320,11 @@ public class StartActivity extends AppCompatActivity {
 
     public userAccount collectData(){
         TextInputLayout userLoginLayout = findViewById(R.id.usernameLayout);
-        TextInputLayout nameLayout = findViewById(R.id.nameLayout);
-        TextInputLayout surnameLayout = findViewById(R.id.surnameLayout);
-        TextInputLayout emailLayout = findViewById(R.id.emailLayout);
-        TextInputLayout dateLayout = findViewById(R.id.dateLayout);
-        TextInputLayout passwordLayout = findViewById(R.id.userInsertPasswordLayout);
+        TextInputLayout nameLayout = findViewById(R.id.editName);
+        TextInputLayout surnameLayout = findViewById(R.id.editSurname);
+        TextInputLayout emailLayout = findViewById(R.id.editEmail);
+        TextInputLayout dateLayout = findViewById(R.id.editDate);
+        TextInputLayout passwordLayout = findViewById(R.id.editPassword);
 
         this.imie = Objects.requireNonNull(nameLayout.getEditText()).getText().toString();
         this.nazwisko = Objects.requireNonNull(surnameLayout.getEditText()).getText().toString();

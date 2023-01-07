@@ -87,7 +87,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/nameLayout"
+                android:id="@+id/editName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#00FFFFFF"
@@ -108,7 +108,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/surnameLayout"
+                android:id="@+id/editSurname"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#00FFFFFF"
@@ -129,7 +129,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/emailLayout"
+                android:id="@+id/editEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#00FFFFFF"
@@ -155,7 +155,7 @@
                 android:orientation="horizontal">
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/dateLayout"
+                    android:id="@+id/editDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.9"
@@ -200,14 +200,14 @@
                     android:textSize="16sp" />
 
                 <Spinner
-                    android:id="@+id/spinner"
+                    android:id="@+id/editSpinnerWojewodztwo"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="0.8" />
             </LinearLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/userInsertPasswordLayout"
+                android:id="@+id/editPassword"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="#00FFFFFF"
@@ -220,7 +220,7 @@
                 app:hintTextColor="#7E6060">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/userInsertPasswordPasswordField"
+                    android:id="@+id/editPasswordField"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="#00FFFFFF"

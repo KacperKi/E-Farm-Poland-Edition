@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity{
     ArrayList<weatherDataClass> danePomiarowe;
     Handler weatherHandler = new Handler();
     ViewModelWeather viewModelWeather;
-    CardView selectWoj,twojeUprawy;
+    CardView selectWoj,twojeUprawy,ustawieniaKonta;
     String currentFrag;
 
     Handler handler = new Handler();
@@ -156,6 +156,7 @@ public class MainActivity extends AppCompatActivity{
     private void find_objects(){
         this.selectWoj = findViewById(R.id.wojewodztwoButton);
         this.twojeUprawy = findViewById(R.id.twojeUprawy);
+        this.ustawieniaKonta = findViewById(R.id.settingsAccount);
     }
 
     private void create_listeners(){
@@ -211,6 +212,12 @@ public class MainActivity extends AppCompatActivity{
                 MainActivity.this.startActivity(myIntent);
             }
         });
+        this.ustawieniaKonta.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                runAccountSettingsActivity();
+            }
+        });
     }
 
     private void set_fragment_in_app(){
@@ -252,6 +259,14 @@ public class MainActivity extends AppCompatActivity{
             finish();
         }
 
+    }
+
+    private void runAccountSettingsActivity(){
+        Intent myIntent = new Intent(MainActivity.this, Activity_updateAccount.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("login", login);
+        myIntent.putExtras(bundle);
+        MainActivity.this.startActivity(myIntent);
     }
 
 }

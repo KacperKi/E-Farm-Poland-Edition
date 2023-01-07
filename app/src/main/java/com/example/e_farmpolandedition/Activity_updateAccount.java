@@ -1,0 +1,134 @@
+package com.example.e_farmpolandedition;
+
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.CalendarView;
+import android.widget.Spinner;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProviders;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
+
+public class Activity_updateAccount extends AppCompatActivity {
+
+    Context context;
+
+    TextInputLayout name,surname,email,dateOfB, password;
+    Spinner province;
+    CalendarView kalendarz;
+    FloatingActionButton savechanges;
+
+    String login;
+
+    FirebaseFirestore firestore;
+
+    @Override
+    protected void onCreate(Bundle b) {
+        super.onCreate(b);
+        setContentView(R.layout.user_account_update);
+        context = getApplicationContext();
+
+        Intent intent = getIntent();
+        login = intent.getStringExtra("login");
+
+        firestore = FirebaseFirestore.getInstance();
+
+        findObject();
+        setListener();
+
+        loadDataToField();
+
+    }
+
+    private void findObject(){
+        name = findViewById(R.id.editName);
+        surname = findViewById(R.id.editSurname);
+        email = findViewById(R.id.editEmail);
+        dateOfB = findViewById(R.id.editDate);
+        province = findViewById(R.id.editSpinnerWojewodztwo);
+        password = findViewById(R.id.editPassword);
+        kalendarz = findViewById(R.id.kalendarz);
+        savechanges = findViewById(R.id.saveChanges);
+    }
+
+    private void setListener(){
+        savechanges.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                savechangesInDB();
+            }
+        });
+
+    }
+
+    private void loadDataToField(){
+        CollectionReference userDataPath = firestore.collection("user_account");
+        userDataPath.document(login).get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if(task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if(document.exists()) {
+                                name.getEditText().setText((CharSequence) document.get("name"));
+                                surname.getEditText().setText((CharSequence) document.get("surname"));
+                                email.getEditText().setText((CharSequence) document.get("email"));
+                                dateOfB.getEditText().setText((CharSequence) document.get("date"));
+                                password.getEditText().setText((CharSequence) document.get("password"));
+//                                province.setSelection();
+                            }
+
+                        }
+                    }
+                });
+
+    }
+
+    private void savechangesInDB(){
+        userAccount changedAc = new userAccount(
+                login,
+                name.getEditText().getText().toString(),
+                surname.getEditText().getText().toString(),
+                email.getEditText().getText().toString(),
+                dateOfB.getEditText().getText().toString(),
+                province.getSelectedItem().toString(),
+                password.getEditText().getText().toString()
+        );
+
+        Map<userAccount, Object> newObj = new HashMap<>();
+
+        if(changedAc.validationData()) {
+            CollectionReference dbUsers = firestore.collection("user_account");
+            dbUsers.document(login).set(changedAc).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void unused) {
+                    Toast.makeText(Activity_updateAccount.this, "Poprawna modyfikacja!",
+                            Toast.LENGTH_LONG).show();
+                }
+            });
+
+        }
+        else Toast.makeText(Activity_updateAccount.this, "Bład modyfikacji!",
+                Toast.LENGTH_LONG).show();
+    }
+
+
+}

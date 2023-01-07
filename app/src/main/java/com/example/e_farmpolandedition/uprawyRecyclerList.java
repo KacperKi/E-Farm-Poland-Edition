@@ -36,7 +36,7 @@ public class uprawyRecyclerList extends RecyclerView.Adapter<uprawyRecyclerList.
                     if(position!=RecyclerView.NO_POSITION) {
                         Toast.makeText(
                                 view.getContext(),
-                                String.valueOf(position),
+                                uprawaLista.get(position).getDescription(),
                                 Toast.LENGTH_LONG).show();
                     }
                 }

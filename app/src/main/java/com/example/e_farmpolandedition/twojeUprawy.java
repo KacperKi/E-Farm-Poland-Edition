@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.datepicker.MaterialDatePicker;
@@ -67,14 +68,6 @@ public class twojeUprawy extends AppCompatActivity implements OnMapReadyCallback
     public void onBackPressed() {
         super.onBackPressed();
         finish();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        getUprawyData();
-        adapterUpraw.notifyDataSetChanged();
     }
 
     @Override
@@ -128,15 +121,30 @@ public class twojeUprawy extends AppCompatActivity implements OnMapReadyCallback
                     .setAction("Yes!", new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            lista_upraw_usera.remove(viewHolder.getAdapterPosition());
-                            adapterUpraw.notifyDataSetChanged();
-                        }
-                    })
-                    .addCallback(new BaseTransientBottomBar.BaseCallback<Snackbar>() {
-                        @Override
-                        public void onDismissed(Snackbar transientBottomBar, int event) {
-                            super.onDismissed(transientBottomBar, event);
-                            Toast.makeText(getApplicationContext(), "Pominięto!", Toast.LENGTH_LONG).show();
+                            String PATH = "uprawy/" + login + "/uprawa";
+                            String nameOfDoc = lista_upraw_usera.get(viewHolder.getAdapterPosition()).name;
+                            firestore.collection(PATH).document(nameOfDoc)
+                                            .delete()
+                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                        @Override
+                                                        public void onSuccess(Void unused) {
+                                                            lista_upraw_usera.remove(viewHolder.getAdapterPosition());
+                                                            adapterUpraw.notifyDataSetChanged();
+                                                            Toast.makeText(getApplicationContext(),
+                                                                    "Usunięto poprawnie!",
+                                                                    Toast.LENGTH_LONG).show();
+                                                            updateGoogleMapsMarkers();
+                                                        }
+                                                    })
+                                                    .addOnFailureListener(new OnFailureListener() {
+                                                        @Override
+                                                        public void onFailure(@NonNull Exception e) {
+                                                            Toast.makeText(getApplicationContext(),
+                                                                    "Usunięcie nie możliwe!",
+                                                                    Toast.LENGTH_LONG).show();
+                                                        }
+                                                    });
+
                         }
                     })
                     .show();
@@ -283,7 +291,9 @@ public class twojeUprawy extends AppCompatActivity implements OnMapReadyCallback
 
     @Override
     public void onMapLongClick(@NonNull LatLng latLng) {
+        googleMaps.clear();
         marker.setPosition(latLng);
+        googleMaps.addMarker(new MarkerOptions().position(latLng).title("Nowe miejsce"));
         googleMaps.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14));
     }
 
@@ -342,6 +352,7 @@ public class twojeUprawy extends AppCompatActivity implements OnMapReadyCallback
 
             }
         });
+
         selectDate.setOnClickListener(view -> {
             materialDatePicker.show(getSupportFragmentManager(),"MATERIAL_DATE_PICKER");
         });
@@ -349,8 +360,6 @@ public class twojeUprawy extends AppCompatActivity implements OnMapReadyCallback
             @Override
             public void onPositiveButtonClick(Object selection) {
                 startDate.setText(materialDatePicker.getHeaderText());
-                Toast.makeText(getApplicationContext(), "Wybrana data to: " + materialDatePicker.getHeaderText(),
-                        Toast.LENGTH_LONG).show();
             }
         });
 
@@ -412,7 +421,8 @@ public class twojeUprawy extends AppCompatActivity implements OnMapReadyCallback
         for(PointOnMaps t: listOfPoints){
             googleMaps.addMarker(new MarkerOptions().position(t.position).title(t.nameOfMarker));
         }
-    }
+        googleMaps.moveCamera(CameraUpdateFactory
+                .newLatLngZoom(new LatLng(51.9189046, 19.1343786), 5));    }
 
     public class PointOnMaps {
         private LatLng position;
