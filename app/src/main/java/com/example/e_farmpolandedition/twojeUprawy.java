@@ -20,6 +20,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -27,6 +28,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.*;
@@ -80,7 +83,40 @@ public class twojeUprawy extends AppCompatActivity implements OnMapReadyCallback
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapterUpraw);
+
+        ItemTouchHelper helper = new ItemTouchHelper(callback);
+        helper.attachToRecyclerView(recyclerView);
     }
+
+    ItemTouchHelper.SimpleCallback callback = new ItemTouchHelper.SimpleCallback(
+            0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder,
+                              @NonNull RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+            Snackbar.make(findViewById(R.id.lista_upraw_layout), "Delete item?", Snackbar.LENGTH_LONG)
+                    .setAction("Yes!", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            lista_upraw_usera.remove(viewHolder.getAdapterPosition());
+                            adapterUpraw.notifyDataSetChanged();
+                        }
+                    })
+                    .addCallback(new BaseTransientBottomBar.BaseCallback<Snackbar>() {
+                        @Override
+                        public void onDismissed(Snackbar transientBottomBar, int event) {
+                            super.onDismissed(transientBottomBar, event);
+                            Toast.makeText(getApplicationContext(), "Pominięto!", Toast.LENGTH_LONG).show();
+                        }
+                    })
+                    .show();
+        }
+    };
+
     private void getUprawyData(){
         for(int i=0;i<40;i++) {
             lista_upraw_usera.add(new uprawa(
