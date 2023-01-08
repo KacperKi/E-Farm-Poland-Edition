@@ -4,13 +4,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.CalendarView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -20,11 +20,12 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 
-import java.util.ArrayList;
-import java.util.Calendar;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class Activity_updateAccount extends AppCompatActivity {
@@ -35,6 +36,7 @@ public class Activity_updateAccount extends AppCompatActivity {
     Spinner province;
     CalendarView kalendarz;
     FloatingActionButton savechanges;
+    ArrayAdapter<CharSequence> adapter;
 
     String login;
 
@@ -54,12 +56,16 @@ public class Activity_updateAccount extends AppCompatActivity {
         findObject();
         setListener();
 
-        loadDataToField();
+        adapter = ArrayAdapter.createFromResource(this,
+                R.array.wojewodztwa, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        province.setAdapter(adapter);
 
+        loadDataToField();
     }
 
     private void findObject(){
-        name = findViewById(R.id.editName);
+        name = findViewById(R.id.nazwaZabiegu);
         surname = findViewById(R.id.editSurname);
         email = findViewById(R.id.editEmail);
         dateOfB = findViewById(R.id.editDate);
@@ -93,9 +99,18 @@ public class Activity_updateAccount extends AppCompatActivity {
                                 email.getEditText().setText((CharSequence) document.get("email"));
                                 dateOfB.getEditText().setText((CharSequence) document.get("date"));
                                 password.getEditText().setText((CharSequence) document.get("password"));
-//                                province.setSelection();
-                            }
+                                province.setSelection(adapter.getPosition((CharSequence) document.get("wojewodztwo")));
 
+                                SimpleDateFormat formatter = new SimpleDateFormat("d MMM yyyy", Locale.ENGLISH);
+                                Date date = null;
+                                try {
+                                    date = formatter.parse(document.get("date").toString());
+                                    long dat = date.getTime();
+                                    kalendarz.setDate(dat);
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
+                            }
                         }
                     }
                 });

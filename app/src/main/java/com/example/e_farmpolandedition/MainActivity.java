@@ -1,6 +1,5 @@
 package com.example.e_farmpolandedition;
 
-
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -19,6 +18,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.smarteist.autoimageslider.SliderView;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,17 +34,18 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-
 public class MainActivity extends AppCompatActivity{
 
     Context context;
     String login;
     private String previousAct;
     ProgressDialog progressDialog;
+
     ArrayList<weatherDataClass> danePomiarowe;
+
     Handler weatherHandler = new Handler();
     ViewModelWeather viewModelWeather;
-    CardView selectWoj,twojeUprawy,ustawieniaKonta;
+    CardView selectWoj,twojeUprawy,ustawieniaKonta,zabiegiCard;
     String currentFrag;
 
     Handler handler = new Handler();
@@ -52,6 +54,10 @@ public class MainActivity extends AppCompatActivity{
     private int wojewodztwo=0;
     private FragmentManager fragmentManager;
     private Fragment fragment1, fragment2;
+
+    String url1 = "https://static.prsa.pl/images/d0cd8dc0-94d6-44da-8f21-e6e8dbf69a4c.jpg";
+    String url2 = "https://www.agrofakt.pl/wp-content/uploads/2021/12/uprawa-pod-kukurydze-930x445.jpg";
+    String url3 = "https://bank.pl/wp-content/uploads/2018/04/nbs.04.2018.foto_.039.a.850x.jpg";
 
     @Override
     protected void onCreate(Bundle b) {
@@ -77,6 +83,8 @@ public class MainActivity extends AppCompatActivity{
 
         set_fragment_in_app();
         run_reading_data();
+
+        runSlider();
     }
 
     class weatherData extends Thread {
@@ -157,6 +165,7 @@ public class MainActivity extends AppCompatActivity{
         this.selectWoj = findViewById(R.id.wojewodztwoButton);
         this.twojeUprawy = findViewById(R.id.twojeUprawy);
         this.ustawieniaKonta = findViewById(R.id.settingsAccount);
+        this.zabiegiCard = findViewById(R.id.zabiegiCardView);
     }
 
     private void create_listeners(){
@@ -218,6 +227,13 @@ public class MainActivity extends AppCompatActivity{
                 runAccountSettingsActivity();
             }
         });
+        this.zabiegiCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                runZabiegiActivity();
+            }
+        });
+
     }
 
     private void set_fragment_in_app(){
@@ -238,8 +254,9 @@ public class MainActivity extends AppCompatActivity{
             public void run() {
                     if (danePomiarowe.isEmpty()) viewModelWeather.setData(new weatherDataClass());
                     else viewModelWeather.setData(danePomiarowe.get(wojewodztwo));
-                    Log.e("Data Runnable - ", "RUN FUNCTION TO UPDATE DATA FROM API");
-                    handler.postDelayed(this, 5000);
+                    viewModelWeather.dataToPrint.setValue(danePomiarowe.get(wojewodztwo));
+
+                handler.postDelayed(this, 5000);
             }
         };
         handler.postDelayed(run, 5000);
@@ -261,6 +278,14 @@ public class MainActivity extends AppCompatActivity{
 
     }
 
+    private void runZabiegiActivity(){
+        Intent myIntent = new Intent(MainActivity.this, Activity_updateAccount.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("login", login);
+        myIntent.putExtras(bundle);
+        MainActivity.this.startActivity(myIntent);
+    }
+
     private void runAccountSettingsActivity(){
         Intent myIntent = new Intent(MainActivity.this, Activity_updateAccount.class);
         Bundle bundle = new Bundle();
@@ -269,4 +294,21 @@ public class MainActivity extends AppCompatActivity{
         MainActivity.this.startActivity(myIntent);
     }
 
+    private void runSlider(){
+        ArrayList<SliderData> sliderDataArrayList = new ArrayList<>();
+
+        SliderView sliderView = findViewById(R.id.slider);
+
+        sliderDataArrayList.add(new SliderData(url1));
+        sliderDataArrayList.add(new SliderData(url2));
+        sliderDataArrayList.add(new SliderData(url3));
+
+        SliderAdapter adapter = new SliderAdapter(this, sliderDataArrayList);
+
+        sliderView.setAutoCycleDirection(SliderView.LAYOUT_DIRECTION_LTR);
+        sliderView.setSliderAdapter(adapter);
+        sliderView.setScrollTimeInSec(3);
+        sliderView.setAutoCycle(true);
+        sliderView.startAutoCycle();
+    }
 }

@@ -320,7 +320,7 @@ public class StartActivity extends AppCompatActivity {
 
     public userAccount collectData(){
         TextInputLayout userLoginLayout = findViewById(R.id.usernameLayout);
-        TextInputLayout nameLayout = findViewById(R.id.editName);
+        TextInputLayout nameLayout = findViewById(R.id.nazwaZabiegu);
         TextInputLayout surnameLayout = findViewById(R.id.editSurname);
         TextInputLayout emailLayout = findViewById(R.id.editEmail);
         TextInputLayout dateLayout = findViewById(R.id.editDate);

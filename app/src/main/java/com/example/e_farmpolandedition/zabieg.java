@@ -5,17 +5,19 @@ public class zabieg {
     private String dataRozpoczecia;
     private String okresKarencji;
     private String dawka;
-    private Float koszt;
+    private String rodzajSrodka;
+    private String koszt;
 
     public zabieg() {
     }
 
-    public zabieg(String nazwaZabiegu, String dataRozpoczecia, String okresKarencji, String dawka, Float koszt) {
+    public zabieg(String nazwaZabiegu, String dataRozpoczecia, String okresKarencji, String dawka, String koszt, String rodzajSrodka) {
         this.nazwaZabiegu = nazwaZabiegu;
         this.dataRozpoczecia = dataRozpoczecia;
         this.okresKarencji = okresKarencji;
         this.dawka = dawka;
         this.koszt = koszt;
+        this.rodzajSrodka = rodzajSrodka;
     }
 
     public String getNazwaZabiegu() {
@@ -50,11 +52,11 @@ public class zabieg {
         this.dawka = dawka;
     }
 
-    public Float getKoszt() {
+    public String getKoszt() {
         return koszt;
     }
 
-    public void setKoszt(Float koszt) {
+    public void setKoszt(String koszt) {
         this.koszt = koszt;
     }
 }

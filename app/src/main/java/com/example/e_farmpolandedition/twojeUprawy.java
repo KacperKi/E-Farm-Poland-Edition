@@ -155,7 +155,6 @@ public class twojeUprawy extends AppCompatActivity implements OnMapReadyCallback
         lista_upraw_usera.clear();
 
         String PATH_Uprawy = "uprawy/" + login + "/uprawa";
-        String PATH_Zabiegi = "uprawy/" + login + "/zabieg";
 
         firestore.collection(PATH_Uprawy)
                 .get()
@@ -163,15 +162,7 @@ public class twojeUprawy extends AppCompatActivity implements OnMapReadyCallback
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if(task.isSuccessful()) {
-                            Log.e("UPRAWA Dane z API Firebase UPRAWA!",
-                                    "Czas : " +
-                                        String.valueOf(Calendar.getInstance().getTime()) +
-                                        " rozmiar tablicy upraw lokalny: " +
-                                        String.valueOf(lista_upraw_usera.size())
-                                    );
-
                             for (QueryDocumentSnapshot document : task.getResult()) {
-//                                uprawa t = document.toObject(uprawa.class);
                                 uprawa t = new uprawa(
                                         document.get("latitude").toString(),
                                         document.get("longtitude").toString(),
@@ -191,18 +182,6 @@ public class twojeUprawy extends AppCompatActivity implements OnMapReadyCallback
                     }
                 });
 
-        firestore.collection(PATH_Zabiegi)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                    lista_zabiegow_usera.add("");
-                            }
-                        }
-                    }
-                });
 
     }
 

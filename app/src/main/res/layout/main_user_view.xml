@@ -8,8 +8,8 @@
 
     <ImageView
         android:id="@+id/icon_tracor"
-        android:layout_width="100sp"
-        android:layout_height="100sp"
+        android:layout_width="35sp"
+        android:layout_height="35sp"
         android:layout_margin="2sp"
         android:background="#64DFDEDE"
         android:clickable="false"
@@ -97,6 +97,7 @@
             android:orientation="horizontal">
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/zabiegiCardView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="5sp"
@@ -173,37 +174,33 @@
             android:layout_weight="1"
             android:orientation="horizontal">
 
-            <ImageButton
-                android:id="@+id/imageButton2"
-                android:layout_width="wrap_content"
-                android:layout_height="35sp"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:background="#96F3EDED"
-                android:baselineAlignBottom="false"
-                app:srcCompat="@drawable/ic_baseline_undo_24"
-                tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
-
-            <FrameLayout
+            <RelativeLayout
                 android:id="@+id/info_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="10">
 
-            </FrameLayout>
+                <com.smarteist.autoimageslider.SliderView
+                    android:id="@+id/slider"
+                    android:layout_width="match_parent"
+                    android:layout_height="195dp"
+                    android:layout_centerInParent="true"
+                    app:sliderAnimationDuration="1000"
+                    app:sliderAutoCycleDirection="back_and_forth"
+                    app:sliderIndicatorAnimationDuration="1000"
+                    app:sliderIndicatorEnabled="true"
+                    app:sliderIndicatorGravity="center_horizontal|bottom"
+                    app:sliderIndicatorMargin="15sp"
+                    app:sliderIndicatorOrientation="horizontal"
+                    app:sliderIndicatorPadding="3sp"
+                    app:sliderIndicatorRadius="2sp"
+                    app:sliderIndicatorSelectedColor="#5A5A5A"
+                    app:sliderIndicatorUnselectedColor="#FFF"
+                    app:sliderScrollTimeInSec="1" />
+            </RelativeLayout>
 
-            <ImageButton
-                android:id="@+id/imageButton3"
-                android:layout_width="wrap_content"
-                android:layout_height="35sp"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:background="#96F3EDED"
-                android:baselineAlignBottom="false"
-                app:srcCompat="@drawable/ic_baseline_redo_24"
-                tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+
         </LinearLayout>
-
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
