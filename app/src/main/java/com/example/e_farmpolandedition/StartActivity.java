@@ -32,6 +32,7 @@ import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClic
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -61,7 +62,7 @@ public class StartActivity extends AppCompatActivity {
 
     boolean validationLoginData = false;
     boolean acceptReg = false;
-    boolean loginExistInDB = false;
+    boolean loginExistInDB;
     boolean passwordCorr = false;
     boolean funStat = false;
 
@@ -133,7 +134,7 @@ public class StartActivity extends AppCompatActivity {
         });
 
         userPasswordField.addTextChangedListener(new TextWatcher() {
-            Pattern pattern = Pattern.compile("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$");
+            Pattern pattern = Pattern.compile("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,20}$");
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -159,7 +160,7 @@ public class StartActivity extends AppCompatActivity {
         });
 
         userLoginField.addTextChangedListener(new TextWatcher() {
-            Pattern pattern = Pattern.compile("^(?=.{8,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$");
+            Pattern pattern = Pattern.compile("^[a-zA-Z0-9._-]{3,}$");
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -217,30 +218,6 @@ public class StartActivity extends AppCompatActivity {
         boolean loginExist = true; //check in DB if login exist - return true, false - notify and run regis
         if(validationLoginData){
             checkLoginPasswordInDB();
-//            Snackbar.make(view, "Użytkownik nie istnieje, utworzyć?", Snackbar.LENGTH_LONG)
-//                    .setAction("Utwórz!", new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View view) {
-//                            //show fields to register user
-//                            try {
-//                                showRegisterCard(view);
-//                            } catch (ParseException e) {
-//                                e.printStackTrace();
-//                            }
-//                        }
-//                    })
-//                    .addCallback(new Snackbar.Callback(){
-//                        @Override
-//                        public void onDismissed(Snackbar transientBottomBar, int event) {
-//                            super.onDismissed(transientBottomBar, event);
-//                            if (event == Snackbar.Callback.DISMISS_EVENT_TIMEOUT) {
-//                                Toast.makeText(getApplicationContext(),
-//                                        "Nie utworzono konta! Utwórz je.",
-//                                        Toast.LENGTH_LONG).show();
-//                            }
-//                        }
-//                    })
-//                    .show();
         }else Toast.makeText(getApplicationContext(), "Mamy problem z logowaniem!", Toast.LENGTH_LONG).show();
 
 
@@ -365,10 +342,10 @@ public class StartActivity extends AppCompatActivity {
 
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             if(document.getId().equals(userLoginLayout.getEditText().getText().toString())) {
-                                loginExistInDB = true;
+//                                loginExistInDB = true;
                             }
                             else {
-                                loginExistInDB = false;
+//                                loginExistInDB = false;
                             }
                         }
                     }
@@ -377,15 +354,18 @@ public class StartActivity extends AppCompatActivity {
     }
 
     public void checkUserinDbLogin(){
-//        loadData.post(new Runnable() {
-//            @Override
-//            public void run() {
-//                progressDialog = new ProgressDialog(StartActivity.this);
-//                progressDialog.setMessage("Pobieram Dane");
-//                progressDialog.setCancelable(false);
-//                progressDialog.show();
-//            }
-//        });
+        TextInputLayout userLoginLayout = findViewById(R.id.userLoginLayout);
+        TextInputLayout userPasswordLayout = findViewById(R.id.userPasswordLayout);
+
+        loadData.post(new Runnable() {
+            @Override
+            public void run() {
+                progressDialog = new ProgressDialog(StartActivity.this);
+                progressDialog.setMessage("Pobieram Dane");
+                progressDialog.setCancelable(false);
+                progressDialog.show();
+            }
+        });
 
         firestore.collection("user_account")
                 .get()
@@ -393,28 +373,37 @@ public class StartActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         TextInputLayout usernameLoginLayout = findViewById(R.id.userLoginLayout);
-                        Log.e("Koniec weryfikacji loginu!", "Weryfikacja CHECK USER IN DB LOGIN");
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            if(document.getId().equals(usernameLoginLayout.getEditText().getText().toString())) {
-                                loginExistInDB = true;
-                                verifyPassword();
-                            }
-                            else {
-                                loginExistInDB = false;
+                        for (DocumentSnapshot document : task.getResult()) {
+                            if(document.get("login").toString().equals(usernameLoginLayout
+                                    .getEditText().getText().toString())) {
+                                    setLoginExist(true);
+
+                                if(document.get("password").toString()
+                                                .equals(userPasswordLayout.getEditText()
+                                                .getText().toString())) {
+
+                                    handler.removeCallbacks(null);
+
+                                    Intent myIntent = new Intent(StartActivity.this, MainActivity.class);
+                                    Bundle bundle = new Bundle();
+                                    bundle.putString("previousActivity", "StartActivity");
+                                    bundle.putString("userLogin", userLoginLayout.getEditText().getText().toString());
+                                    myIntent.putExtras(bundle);
+                                    StartActivity.this.startActivity(myIntent);
+                                }
                             }
                         }
+                        Toast.makeText(getApplicationContext(), "Login błędny!", Toast.LENGTH_SHORT).show();
                         setFunStat(true);
                     }
                 });
 
-//        System.out.println("Fun set error after checkuser");
-//
-//        loadData.post(new Runnable() {
-//            @Override
-//            public void run() {
-//                    if(progressDialog.isShowing()) progressDialog.dismiss();
-//            }
-//        });
+        loadData.post(new Runnable() {
+            @Override
+            public void run() {
+                    if(progressDialog.isShowing()) progressDialog.dismiss();
+            }
+        });
     }
 
     public void verifyPassword(){
@@ -442,24 +431,29 @@ public class StartActivity extends AppCompatActivity {
         this.funStat = i;
     }
 
+    public void setLoginExist(boolean t){
+        this.loginExistInDB = t;
+    }
+
     public void checkLoginPasswordInDB() {
         TextInputLayout userLoginLayout = findViewById(R.id.userLoginLayout);
-        for(int w=0; w<3; w++){checkUserinDbLogin();}
+        checkUserinDbLogin();
 
-            if (loginExistInDB) {
-                if (passwordCorr) {
-                    handler.removeCallbacks(null);
-
-                    Intent myIntent = new Intent(StartActivity.this, MainActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putString("previousActivity", "StartActivity");
-                    bundle.putString("userLogin", userLoginLayout.getEditText().getText().toString());
-                    myIntent.putExtras(bundle);
-                    StartActivity.this.startActivity(myIntent);
-                } else
-                    Toast.makeText(getApplicationContext(), "Hasło nieprawidłowe!", Toast.LENGTH_LONG).show();
-            } else
-                Toast.makeText(getApplicationContext(), "Login nieprawidłowy!", Toast.LENGTH_LONG).show();
+//            if (this.loginExistInDB) {
+//                Log.e("Stan hasła", String.valueOf(passwordCorr));
+//                if (passwordCorr) {
+//                    handler.removeCallbacks(null);
+//
+//                    Intent myIntent = new Intent(StartActivity.this, MainActivity.class);
+//                    Bundle bundle = new Bundle();
+//                    bundle.putString("previousActivity", "StartActivity");
+//                    bundle.putString("userLogin", userLoginLayout.getEditText().getText().toString());
+//                    myIntent.putExtras(bundle);
+//                    StartActivity.this.startActivity(myIntent);
+//                } else
+//                    Toast.makeText(getApplicationContext(), "Hasło nieprawidłowe!", Toast.LENGTH_LONG).show();
+//            } else
+//                Toast.makeText(getApplicationContext(), "Login nieprawidłowy!", Toast.LENGTH_LONG).show();
     }
 }
 

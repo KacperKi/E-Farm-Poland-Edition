@@ -235,7 +235,6 @@ public class twojeUprawy extends AppCompatActivity implements OnMapReadyCallback
         googleMap.setOnMarkerClickListener(this);
     }
 
-
     @Override
     public boolean onMarkerClick(@NonNull Marker marker) {
         new MaterialAlertDialogBuilder(twojeUprawy.this)

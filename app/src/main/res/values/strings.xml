@@ -62,4 +62,41 @@
     <string name="dataUprawy">Data</string>
     <string name="powierzchniaUprawy">Powierzchnia</string>
 
+
+
+    <string-array name="opryski_nawozy">
+        <item>Polifoska 4</item>
+        <item>Polifoska 6</item>
+        <item>Bor 42</item>
+        <item>Mangan</item>
+        <item>Siarka</item>
+        <item>Fosfor</item>
+        <item>Magnez</item>
+        <item>Wieloskładnik</item>
+        <item>Azot</item>
+        <item>Amofoska 22</item>
+        <item>Amoniak</item>
+    </string-array>
+
+    <string-array name="dawka">
+        <item>1mg/100g</item>
+        <item>2mg/100g</item>
+        <item>3mg/100g</item>
+        <item>4mg/100g</item>
+        <item>5mg/100g</item>
+        <item>10mg/100g</item>
+    </string-array>
+
+    <string-array name="okres_karencji">
+        <item>2h</item>
+        <item>4h</item>
+        <item>10h</item>
+        <item>24h</item>
+        <item>48h</item>
+        <item>3-6dni</item>
+        <item>1tydzień</item>
+        <item>2tygodnie</item>
+    </string-array>
+
+
 </resources>

@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/uprawy_usera"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/back_1">
@@ -36,61 +37,191 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:weightSum="8">
 
                 <TextView
                     android:id="@+id/textView21"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
                     android:text="Dodaj zabieg do listy"
                     android:textAlignment="center"
                     android:textSize="22sp" />
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/nazwaZabiegu"
+                    android:id="@+id/nazwaZabieguForm"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5sp"
                     android:layout_marginEnd="5sp"
+                    android:layout_weight="1"
                     android:background="#00FFFFFF"
+                    android:clickable="true"
+                    android:gravity="center_vertical"
                     android:hint="Podaj nazwę zabiegu"
                     android:inputType="textPersonName"
+                    android:textAlignment="viewStart"
                     app:endIconMode="clear_text">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/nazwaText"
+                        android:id="@+id/nazwaText1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="#00FFFFFF"
+                        android:clickable="true"
+                        android:editable="true"
                         android:ems="10"
+                        android:enabled="true"
                         android:textAlignment="viewStart"
                         android:textColorHint="#7E6060"
+                        android:textSize="18sp"
                         android:visibility="visible"
                         tools:ignore="TouchTargetSizeCheck" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/nazwaZabiegu"
+                    android:id="@+id/kwotaZabieguForm"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="5sp"
                     android:layout_marginEnd="5sp"
+                    android:layout_weight="1"
                     android:background="#00FFFFFF"
-                    android:hint="Podaj nazwę zabiegu"
+                    android:gravity="center_vertical"
+                    android:hint="Podaj kwotę zabiegu"
                     android:inputType="textPersonName"
+                    android:textAlignment="viewStart"
                     app:endIconMode="clear_text">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/nazwaText"
+                        android:id="@+id/nazwaText2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="#00FFFFFF"
                         android:ems="10"
+                        android:inputType="number"
                         android:textAlignment="viewStart"
                         android:textColorHint="#7E6060"
+                        android:textSize="18sp"
                         android:visibility="visible"
                         tools:ignore="TouchTargetSizeCheck" />
+
+
                 </com.google.android.material.textfield.TextInputLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <TextView
+                        android:id="@+id/textView22"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="15sp"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:text="Dawka środka"
+                        android:textAlignment="viewEnd"
+                        android:textSize="18sp" />
+
+                    <Spinner
+                        android:id="@+id/dawka"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <TextView
+                        android:id="@+id/textView23"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="15sp"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:text="Karencja"
+                        android:textAlignment="viewEnd"
+                        android:textSize="18sp" />
+
+                    <Spinner
+                        android:id="@+id/okres_karencji"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <TextView
+                        android:id="@+id/textView24"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="15sp"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:text="Uprawa"
+                        android:textAlignment="viewEnd"
+                        android:textSize="18sp" />
+
+                    <Spinner
+                        android:id="@+id/uprawyUsera"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <TextView
+                        android:id="@+id/textView26"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="15sp"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:text="Środek"
+                        android:textAlignment="viewEnd"
+                        android:textSize="18sp" />
+
+                    <Spinner
+                        android:id="@+id/rodzajSrodka"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical" />
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/selectDateForm"
+                    android:layout_width="300sp"
+                    android:layout_height="35sp"
+                    android:layout_margin="15sp"
+                    android:layout_weight="1"
+                    android:text="Wybierz datę zabiegu" />
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>

@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity{
 
         Intent intent = getIntent();
         login = intent.getStringExtra("userLogin");
-        Toast.makeText(getApplicationContext(), "witaj "+login, Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "Witaj "+login, Toast.LENGTH_LONG).show();
 
         find_objects();
         create_listeners();
@@ -279,7 +279,7 @@ public class MainActivity extends AppCompatActivity{
     }
 
     private void runZabiegiActivity(){
-        Intent myIntent = new Intent(MainActivity.this, Activity_updateAccount.class);
+        Intent myIntent = new Intent(MainActivity.this, Activity_zabiegi.class);
         Bundle bundle = new Bundle();
         bundle.putString("login", login);
         myIntent.putExtras(bundle);
